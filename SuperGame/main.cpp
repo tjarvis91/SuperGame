@@ -3,7 +3,7 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
 #include "game_bitmaps.h"
- 
+
 const float FPS = 60;
 const int SCREEN_W = 640;
 const int SCREEN_H = 480;
@@ -34,16 +34,16 @@ int main(int argc, char **argv)
    int map [SCREEN_W/32][SCREEN_H/32];
 
    srand(time(NULL));
- 
+
    if(!al_init()) {
       fprintf(stderr, "failed to initialize allegro!\n");
       return -1;
    }
-   
+
    if (!al_init_image_addon()) {
-	   al_show_native_message_box(display, "Error", "Error", "Failed to initialize al_init_image_addon!",
-		   NULL, ALLEGRO_MESSAGEBOX_ERROR);
-	   return 0;
+       al_show_native_message_box(display, "Error", "Error", "Failed to initialize al_init_image_addon!",
+           NULL, ALLEGRO_MESSAGEBOX_ERROR);
+       return 0;
    }
 
    if(!al_install_keyboard()) {
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
    if(!event_queue) {
       fprintf(stderr, "failed to create event_queue!\n");
       al_destroy_bitmap(melee_char);
-	  al_destroy_bitmap(terrain);
+      al_destroy_bitmap(terrain);
       al_destroy_display(display);
       al_destroy_timer(timer);
       return -1;
@@ -101,11 +101,11 @@ int main(int argc, char **argv)
    //This generates the map
    for (int i = 0; i < (SCREEN_W / 32); i++)
    {
-	   for (int j = 0; j < (SCREEN_H / 32); j++)
-	   {
-		   int k = rand() % 4;
-		   map[i][j] = k;
-	   }
+       for (int j = 0; j < (SCREEN_H / 32); j++)
+       {
+           int k = rand() % 4;
+           map[i][j] = k;
+       }
    }
 
    while(!doexit)
@@ -139,22 +139,22 @@ int main(int argc, char **argv)
          switch(ev.keyboard.keycode) {
             case ALLEGRO_KEY_UP:
                key[KEY_UP] = true;
-			   character_direction = 1;
+               character_direction = 1;
                break;
 
             case ALLEGRO_KEY_DOWN:
                key[KEY_DOWN] = true;
-			   character_direction = 0;
+               character_direction = 0;
                break;
 
             case ALLEGRO_KEY_LEFT:
                key[KEY_LEFT] = true;
-			   character_direction = 2;
+               character_direction = KEY_LEFT;
                break;
 
             case ALLEGRO_KEY_RIGHT:
                key[KEY_RIGHT] = true;
-			   character_direction = 3;
+               character_direction = KEY_RIGHT;
                break;
          }
       }
@@ -186,32 +186,32 @@ int main(int argc, char **argv)
          redraw = false;
 
 
-		 //This draws the map
-		 for (int i = 0; i < (SCREEN_W / 32); i++)
-		 {
-			 for (int j = 0; j < (SCREEN_H / 32); j++)
-			 {
-				 al_draw_bitmap_region(terrain, 32 * map[i][j], 0, 32, 32, 32 * i, 32 * j, 0);
-			 }
-		 }
+         //This draws the map
+         for (int i = 0; i < (SCREEN_W / 32); i++)
+         {
+             for (int j = 0; j < (SCREEN_H / 32); j++)
+             {
+                 al_draw_bitmap_region(terrain, 32 * map[i][j], 0, 32, 32, 32 * i, 32 * j, 0);
+             }
+         }
 
-		 //This draws the side of the character that corresponds with the direction of his movement
-		 if (character_direction == 1)
-		 {
-         al_draw_bitmap(melee_char, melee_char_x, melee_char_y, 0);
-		 }
-		 else if (character_direction == 2)
-		 {
-			 al_draw_bitmap_region(melee_char, 64, 0, 32, 32, melee_char_x, melee_char_y, 0);
-		 }
-		 else if (character_direction == 3)
-		 {
-			 al_draw_bitmap_region(melee_char, 96, 0, 32, 32, melee_char_x, melee_char_y, 0);
-		 }
-		 else
-		 {
-			 al_draw_bitmap_region(melee_char, 0, 0, 32, 32, melee_char_x, melee_char_y, 0);
-		 }
+         //This draws the side of the character that corresponds with the direction of his movement
+         if (character_direction == 1)
+         {
+            al_draw_bitmap_region(melee_char, 32, 0, 32, 32,  melee_char_x, melee_char_y, 0);
+         }
+         else if (character_direction == 2)
+         {
+             al_draw_bitmap_region(melee_char, 64, 0, 32, 32, melee_char_x, melee_char_y, 0);
+         }
+         else if (character_direction == 3)
+         {
+             al_draw_bitmap_region(melee_char, 96, 0, 32, 32, melee_char_x, melee_char_y, 0);
+         }
+         else
+         {
+             al_draw_bitmap_region(melee_char, 0, 0, 32, 32, melee_char_x, melee_char_y, 0);
+         }
 
          al_flip_display();
       }

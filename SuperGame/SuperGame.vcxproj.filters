@@ -20,19 +20,19 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="game_constants.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="game_bitmaps.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_constants.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Bitmaps\MeleeChar.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Bitmaps\MeleeChar.bmp">
-      <Filter>Resource Files</Filter>
+      <Filter>Source Files\Resource Files</Filter>
+    </Image>
+    <Image Include="Bitmaps\MeleeChar.png">
+      <Filter>Source Files\Resource Files</Filter>
     </Image>
   </ItemGroup>
 </Project>
