@@ -189,23 +189,7 @@ int main(int argc, char **argv)
              }
          }
 
-         //This draws the side of the character that corresponds with the direction of his movement
-         if (character_direction == 1)
-         {
-            al_draw_bitmap_region(melee_char, 32, 0, 32, 32,  melee_char_x, melee_char_y, 0);
-         }
-         else if (character_direction == 2)
-         {
-             al_draw_bitmap_region(melee_char, 64, 0, 32, 32, melee_char_x, melee_char_y, 0);
-         }
-         else if (character_direction == 3)
-         {
-             al_draw_bitmap_region(melee_char, 96, 0, 32, 32, melee_char_x, melee_char_y, 0);
-         }
-         else
-         {
-             al_draw_bitmap_region(melee_char, 0, 0, 32, 32, melee_char_x, melee_char_y, 0);
-         }
+         al_draw_bitmap_region(melee_char, 32 * character_direction, 0, 32, 32,  melee_char_x, melee_char_y, 0);
 
          al_flip_display();
       }
