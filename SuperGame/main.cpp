@@ -9,13 +9,7 @@ const int SCREEN_W = 640;
 const int SCREEN_H = 480;
 const int BOUNCER_SIZE = 32;
 enum directional_keys : int {
-   KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
-};
-enum wasd_keys : int {
-    W_KEY = KEY_UP,
-    A_KEY = KEY_LEFT,
-    S_KEY = KEY_DOWN,
-    D_KEY = KEY_RIGHT
+   KEY_DOWN, KEY_UP, KEY_LEFT, KEY_RIGHT
 };
 
 int main(int argc, char **argv)
@@ -139,12 +133,12 @@ int main(int argc, char **argv)
          switch(ev.keyboard.keycode) {
             case ALLEGRO_KEY_UP:
                key[KEY_UP] = true;
-               character_direction = 1;
+               character_direction = KEY_UP;
                break;
 
             case ALLEGRO_KEY_DOWN:
                key[KEY_DOWN] = true;
-               character_direction = 0;
+               character_direction = KEY_DOWN;
                break;
 
             case ALLEGRO_KEY_LEFT:
