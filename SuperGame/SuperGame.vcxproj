@@ -73,16 +73,12 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="game_bitmaps.h" />
     <ClInclude Include="game_constants.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Bitmaps\MeleeChar.bmp" />
-    <Image Include="Bitmaps\MeleeChar.png">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    <Image Include="Bitmaps\MeleeChar.png" />
     </Image>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

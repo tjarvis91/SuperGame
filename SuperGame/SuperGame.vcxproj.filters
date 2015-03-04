@@ -20,20 +20,19 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="game_constants.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_bitmaps.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Bitmaps\MeleeChar.png">
-      <Filter>Source Files\Resource Files</Filter>
+      <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Bitmaps\MeleeChar.bmp">
-      <Filter>Source Files\Resource Files</Filter>
+      <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
 </Project>
