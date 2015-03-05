@@ -7,14 +7,17 @@
 #ifndef game_bitmaps_h
 #define game_bitmaps_h
 
+/* Characters */
 #define MELEE_CHAR_BMP          "Bitmaps/MeleeChar.bmp"
-#define GRASS_BMP               "Bitmaps/grassy.bmp"
-
-
 #define MELEE_CHAR_PNG          "Bitmaps/MeleeChar.png"
+
+/* Obstacles */
+#define OBSTACLE_PNG            "Bitmaps/Obstacle.png"
+
+/* Backgrounds */
+#define GRASS_BMP               "Bitmaps/grassy.bmp"
 #define GRASS_PNG               "Bitmaps/grassy.png"
-#define OBSTACLE_PNG			"Bitmaps/Obstacle.png"
-#define WOOD_PNG				"Bitmaps/Wood.png"
-#define COBBLESTONE_PNG			"Bitmaps/CobbleStone.png"
+#define WOOD_PNG                "Bitmaps/Wood.png"
+#define COBBLESTONE_PNG         "Bitmaps/CobbleStone.png"
 
 #endif
