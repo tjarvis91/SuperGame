@@ -14,5 +14,7 @@
 #define MELEE_CHAR_PNG          "Bitmaps/MeleeChar.png"
 #define GRASS_PNG               "Bitmaps/grassy.png"
 #define OBSTACLE_PNG			"Bitmaps/Obstacle.png"
+#define WOOD_PNG				"Bitmaps/Wood.png"
+#define COBBLESTONE_PNG			"Bitmaps/CobbleStone.png"
 
 #endif

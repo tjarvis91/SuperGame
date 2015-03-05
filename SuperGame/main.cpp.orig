@@ -75,8 +75,8 @@ int main(int argc, char **argv)
       return -1;
    }
 
-    melee_char = al_load_bitmap(MELEE_CHAR_PNG);
-    terrain = al_load_bitmap(WOOD_PNG);
+    melee_char = al_load_bitmap(MELEE_CHAR_BMP);
+    terrain = al_load_bitmap(GRASS_BMP);
 	obstacle = al_load_bitmap(OBSTACLE_PNG);
 
 
@@ -195,7 +195,7 @@ int main(int argc, char **argv)
       }
 
 	  //Obstacle X Character collision
-	  if ((melee_char_x < obstacle_x + obstacle_w && melee_char_x > obstacle_x - obstacle_w) && melee_char_y + (character_size / 2) <= obstacle_y + obstacle_h && melee_char_y + (character_size / 2) > obstacle_y)
+	  if ((melee_char_x < obstacle_x + obstacle_w && melee_char_x > obstacle_x - obstacle_w) && melee_char_y <= obstacle_y + obstacle_h && melee_char_y > obstacle_y)
 	  {
 		  character_collision[0] = true;
 	  }
@@ -211,7 +211,7 @@ int main(int argc, char **argv)
 	  {
 		  character_collision[1] = false;
 	  }
-	  if ((melee_char_y + (character_size / 2) < obstacle_y + obstacle_h && melee_char_y + (character_size / 2) > obstacle_y - obstacle_h) && melee_char_x + character_size >= obstacle_x && melee_char_x < obstacle_x)
+	  if ((melee_char_y < obstacle_y + obstacle_h && melee_char_y > obstacle_y - obstacle_h) && melee_char_x + character_size >= obstacle_x && melee_char_x < obstacle_x)
 	  {
 		  character_collision[3] = true;
 	  }
@@ -219,7 +219,7 @@ int main(int argc, char **argv)
 	  {
 		  character_collision[3] = false;
 	  }
-	  if ((melee_char_y + (character_size / 2) < obstacle_y + obstacle_h && melee_char_y + (character_size / 2) > obstacle_y - obstacle_h) && melee_char_x <= obstacle_x + obstacle_w && melee_char_x > obstacle_x)
+	  if ((melee_char_y < obstacle_y + obstacle_h && melee_char_y > obstacle_y - obstacle_h) && melee_char_x <= obstacle_x + obstacle_w && melee_char_x > obstacle_x)
 	  {
 		  character_collision[2] = true;
 	  }
@@ -227,7 +227,6 @@ int main(int argc, char **argv)
 	  {
 		  character_collision[2] = false;
 	  }
-
 
       if(redraw && al_is_event_queue_empty(event_queue)) {
          redraw = false;
@@ -245,7 +244,10 @@ int main(int argc, char **argv)
 		 //This draws an obstacle
 		 al_draw_bitmap_region(obstacle, 0, 0, obstacle_w, obstacle_h, obstacle_x, obstacle_y, 0);
 
-			 al_draw_bitmap_region(melee_char, character_size * character_direction, 0, character_size, character_size, melee_char_x, melee_char_y, 0);
+			 al_draw_bitmap_region(melee_char, character_size * 1, 0, character_size, character_size, melee_char_x, melee_char_y, 0);
+			 al_draw_bitmap_region(melee_char, character_size * 2, 0, character_size, character_size, melee_char_x, melee_char_y, 0);
+			 al_draw_bitmap_region(melee_char, character_size * 3, 0, character_size, character_size, melee_char_x, melee_char_y, 0);
+			 al_draw_bitmap_region(melee_char, character_size * 0, 0, character_size, character_size, melee_char_x, melee_char_y, 0);
 
          al_flip_display();
       }
