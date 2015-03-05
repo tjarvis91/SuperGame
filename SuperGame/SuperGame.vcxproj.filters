@@ -23,7 +23,10 @@
     <ClInclude Include="game_bitmaps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game_constants.h">
+    <ClInclude Include="error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
