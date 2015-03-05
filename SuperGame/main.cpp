@@ -12,6 +12,12 @@ enum directional_keys : int {
    KEY_DOWN, KEY_UP, KEY_LEFT, KEY_RIGHT
 };
 
+struct MapTile
+{
+	int floor;
+	bool filled;
+};
+
 int main(int argc, char **argv)
 {
    ALLEGRO_DISPLAY *display = NULL;
@@ -20,18 +26,15 @@ int main(int argc, char **argv)
    ALLEGRO_BITMAP *melee_char = NULL;
    ALLEGRO_BITMAP *terrain = NULL;
    ALLEGRO_BITMAP *obstacle = NULL;
-   float melee_char_x = SCREEN_W / 2.0 - BOUNCER_SIZE / 2.0;
-   float melee_char_y = SCREEN_H / 2.0 - BOUNCER_SIZE / 2.0;
+   int melee_char_x = SCREEN_W / 2.0 - BOUNCER_SIZE / 2.0;
+   int melee_char_y = SCREEN_H / 2.0 - BOUNCER_SIZE / 2.0;
+   int try_x;
+   int try_y;
    bool key[4] = { false, false, false, false };
    bool redraw = true;
    bool doexit = false;
-   bool character_collision[4];
-   character_collision[0] = false;
-   character_collision[1] = false;
-   character_collision[2] = false;
-   character_collision[3] = false;
    int character_direction = 0;
-   int map [SCREEN_W/32][SCREEN_H/32];
+   MapTile map[SCREEN_W/32][SCREEN_H/32];
    double character_speed = 4.0;
    int obstacle_x = 0;
    int obstacle_y = 0;
@@ -39,6 +42,7 @@ int main(int argc, char **argv)
    int obstacle_h = 32;
    int character_size = 32;
 
+   memset(map, 0, sizeof(map));
    srand(time(NULL));
 
    if(!al_init()) {
@@ -113,34 +117,66 @@ int main(int argc, char **argv)
        for (int j = 0; j < (SCREEN_H / 32); j++)
        {
            int k = rand() % 4;
-           map[i][j] = k;
+           map[i][j].floor = k;
        }
    }
 
    obstacle_x = 32 * (rand() % (SCREEN_W / 32));
    obstacle_y = 32 * (rand() % (SCREEN_H / 32));
+   map[obstacle_x/32][obstacle_y/32].filled = true;
 
    while(!doexit)
    {
       ALLEGRO_EVENT ev;
       al_wait_for_event(event_queue, &ev);
 
+	  try_x = 0;
+	  try_y = 0;
       if(ev.type == ALLEGRO_EVENT_TIMER) {
-		  if (key[KEY_UP] && melee_char_y >= character_speed && !character_collision[0]) {
-			  melee_char_y -= character_speed;
-         }
+		  if (key[KEY_UP] && melee_char_y >= character_speed)
+		  {
+			  try_y = -character_speed;
+          }
 
-		  if (key[KEY_DOWN] && melee_char_y <= SCREEN_H - BOUNCER_SIZE - character_speed && !character_collision[1]) {
-			 melee_char_y += character_speed;
-         }
+		  if (key[KEY_DOWN] && melee_char_y <= SCREEN_H - BOUNCER_SIZE - character_speed )
+		  {
+			   try_y = character_speed; 
+          }
 
-		  if (key[KEY_LEFT] && melee_char_x >= character_speed && !character_collision[2]) {
-			 melee_char_x -= character_speed;
-         }
+		  if (key[KEY_LEFT] && melee_char_x >= character_speed )
+		  {
+			 try_x = -character_speed;
+          }
 
-		  if (key[KEY_RIGHT] && melee_char_x <= SCREEN_W - BOUNCER_SIZE - character_speed && !character_collision[3]) {
-			 melee_char_x += character_speed;
-         }
+		  if (key[KEY_RIGHT] && melee_char_x <= SCREEN_W - BOUNCER_SIZE - character_speed )
+		  {
+			 try_x = character_speed;
+          }
+
+		  if (!map[(melee_char_x + try_x) / 32][(melee_char_y + try_y) / 32].filled &&
+			  !map[(melee_char_x + character_size + try_x) / 32][(melee_char_y + try_y) / 32].filled &&
+			  !map[(melee_char_x + try_x) / 32][(melee_char_y + character_size + try_y) / 32].filled &&
+			  !map[(melee_char_x + character_size + try_x) / 32][(melee_char_y + character_size + try_y) / 32].filled )
+		  {
+			  melee_char_x += try_x;
+			  melee_char_y += try_y;
+			  if (try_y < 0)
+			  {
+				  character_direction = KEY_UP;
+			  }
+			  else if (try_y > 0)
+			  {
+				  character_direction = KEY_DOWN;
+			  }
+			  else if (try_x < 0)
+			  {
+				  character_direction = KEY_LEFT;
+			  }
+			  else if (try_x > 0)
+			  {
+				  character_direction = KEY_RIGHT;
+			  }
+		  }
 
          redraw = true;
       }
@@ -151,22 +187,18 @@ int main(int argc, char **argv)
          switch(ev.keyboard.keycode) {
             case ALLEGRO_KEY_UP:
                key[KEY_UP] = true;
-               character_direction = KEY_UP;
                break;
 
             case ALLEGRO_KEY_DOWN:
                key[KEY_DOWN] = true;
-               character_direction = KEY_DOWN;
                break;
 
             case ALLEGRO_KEY_LEFT:
                key[KEY_LEFT] = true;
-               character_direction = KEY_LEFT;
                break;
 
             case ALLEGRO_KEY_RIGHT:
                key[KEY_RIGHT] = true;
-               character_direction = KEY_RIGHT;
                break;
          }
       }
@@ -194,41 +226,6 @@ int main(int argc, char **argv)
          }
       }
 
-	  //Obstacle X Character collision
-	  if ((melee_char_x < obstacle_x + obstacle_w && melee_char_x > obstacle_x - obstacle_w) && melee_char_y + (character_size / 2) <= obstacle_y + obstacle_h && melee_char_y + (character_size / 2) > obstacle_y)
-	  {
-		  character_collision[0] = true;
-	  }
-	  else
-	  {
-		  character_collision[0] = false;
-	  }
-	  if ((melee_char_x < obstacle_x + obstacle_w && melee_char_x > obstacle_x - obstacle_w) && melee_char_y + character_size >= obstacle_y && melee_char_y < obstacle_y)
-	  {
-		  character_collision[1] = true;
-	  }
-	  else
-	  {
-		  character_collision[1] = false;
-	  }
-	  if ((melee_char_y + (character_size / 2) < obstacle_y + obstacle_h && melee_char_y + (character_size / 2) > obstacle_y - obstacle_h) && melee_char_x + character_size >= obstacle_x && melee_char_x < obstacle_x)
-	  {
-		  character_collision[3] = true;
-	  }
-	  else
-	  {
-		  character_collision[3] = false;
-	  }
-	  if ((melee_char_y + (character_size / 2) < obstacle_y + obstacle_h && melee_char_y + (character_size / 2) > obstacle_y - obstacle_h) && melee_char_x <= obstacle_x + obstacle_w && melee_char_x > obstacle_x)
-	  {
-		  character_collision[2] = true;
-	  }
-	  else
-	  {
-		  character_collision[2] = false;
-	  }
-
-
       if(redraw && al_is_event_queue_empty(event_queue)) {
          redraw = false;
 
@@ -238,7 +235,7 @@ int main(int argc, char **argv)
          {
              for (int j = 0; j < (SCREEN_H / 32); j++)
              {
-                 al_draw_bitmap_region(terrain, 32 * map[i][j], 0, 32, 32, 32 * i, 32 * j, 0);
+                 al_draw_bitmap_region(terrain, 32 * map[i][j].floor, 0, 32, 32, 32 * i, 32 * j, 0);
              }
          }
 		 
@@ -253,6 +250,7 @@ int main(int argc, char **argv)
 
    al_destroy_bitmap(melee_char);
    al_destroy_bitmap(terrain);
+   al_destroy_bitmap(obstacle);
    al_destroy_timer(timer);
    al_destroy_display(display);
    al_destroy_event_queue(event_queue);
