@@ -49,21 +49,25 @@ int try_y = 0;
     if (dir[UP] && y >= speed)
     {
         try_y = -speed;
+        direction = UP;
     }
 
     if (dir[DOWN] && y <= SCREEN_H - BLOCK_SIZE - speed )
     {
         try_y = speed;
+        direction = DOWN;
     }
 
     if (dir[LEFT] && x >= speed )
     {
         try_x = -speed;
+        direction = LEFT;
     }
 
     if (dir[RIGHT] && x <= SCREEN_W - BLOCK_SIZE - speed )
     {
         try_x = speed;
+        direction = RIGHT;
     }
 
     if (!map->block[(x + try_x) / BLOCK_SIZE][(y + try_y) / BLOCK_SIZE].filled &&
@@ -73,22 +77,6 @@ int try_y = 0;
     {
         x += try_x;
         y += try_y;
-        if (try_y < 0)
-        {
-            direction = UP;
-        }
-        else if (try_y > 0)
-        {
-            direction = DOWN;
-        }
-        else if (try_x < 0)
-        {
-            direction = LEFT;
-        }
-        else if (try_x > 0)
-        {
-            direction = RIGHT;
-        }
         return true;
     }
 
