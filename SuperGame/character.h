@@ -13,9 +13,10 @@ class Character
 {
 public:
     ALLEGRO_BITMAP *image;
+    Map *map;
     int x, y, w, h, speed;
     Direction direction;
-    Character(int, int);
+    Character(Map*, int, int);
     ~Character();
     bool Move(bool[4]);
     void Draw();
@@ -23,7 +24,7 @@ public:
 
 };
 
-Character::Character(int x_in, int y_in)
+Character::Character(Map *map_in, int x_in, int y_in)
 {
     x = x_in;
     y = y_in;
@@ -31,6 +32,7 @@ Character::Character(int x_in, int y_in)
     w = BLOCK_SIZE;
     h = BLOCK_SIZE;
     direction = DOWN;
+    map = map_in;
     image = NULL;
 }
 
@@ -64,10 +66,10 @@ int try_y = 0;
         try_x = speed;
     }
 
-    if (!map[(x + try_x) / BLOCK_SIZE][(y + try_y) / BLOCK_SIZE].filled &&
-        !map[(x + w + try_x) / BLOCK_SIZE][(y + try_y) / BLOCK_SIZE].filled &&
-        !map[(x + try_x) / BLOCK_SIZE][(y + h + try_y) / BLOCK_SIZE].filled &&
-        !map[(x + w + try_x) / BLOCK_SIZE][(y + h + try_y) / BLOCK_SIZE].filled )
+    if (!map->block[(x + try_x) / BLOCK_SIZE][(y + try_y) / BLOCK_SIZE].filled &&
+        !map->block[(x + w + try_x) / BLOCK_SIZE][(y + try_y) / BLOCK_SIZE].filled &&
+        !map->block[(x + try_x) / BLOCK_SIZE][(y + h + try_y) / BLOCK_SIZE].filled &&
+        !map->block[(x + w + try_x) / BLOCK_SIZE][(y + h + try_y) / BLOCK_SIZE].filled )
     {
         x += try_x;
         y += try_y;

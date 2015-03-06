@@ -31,7 +31,9 @@ struct MapTile
     bool filled;
 };
 
-/* Globals */
-MapTile map[MAP_BLOCK_W][MAP_BLOCK_H];
+struct Map
+{
+    MapTile block[MAP_BLOCK_W][MAP_BLOCK_H];
+};
 
 #endif

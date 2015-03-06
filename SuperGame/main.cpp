@@ -14,7 +14,8 @@
 
 int main(int argc, char **argv)
 {
-    Character melee_char = Character((SCREEN_W / 2.0 - BLOCK_SIZE / 2.0), (SCREEN_H / 2.0 - BLOCK_SIZE / 2.0));
+    Map map;
+    Character melee_char = Character(&map, (SCREEN_W / 2.0 - BLOCK_SIZE / 2.0), (SCREEN_H / 2.0 - BLOCK_SIZE / 2.0));
     ALLEGRO_BITMAP *terrain = NULL;
     ALLEGRO_BITMAP *obstacle = NULL;
     int try_x;
@@ -22,13 +23,12 @@ int main(int argc, char **argv)
     bool key[4] = { false, false, false, false };
     bool redraw = true;
     bool doexit = false;
-    MapTile map[MAP_BLOCK_W][MAP_BLOCK_H];
     int obstacle_x = 0;
     int obstacle_y = 0;
     int obstacle_w = 32;
     int obstacle_h = 32;
 
-    memset(map, 0, sizeof(map));
+    memset(&map, 0, sizeof(map));
     srand(time(NULL));
 
     Game g = Game();
@@ -55,13 +55,13 @@ int main(int argc, char **argv)
        for (int j = 0; j < (MAP_BLOCK_H); j++)
        {
            int k = rand() % 4;
-           map[i][j].floor = k;
+           map.block[i][j].floor = k;
        }
    }
 
    obstacle_x = BLOCK_SIZE * (rand() % (MAP_BLOCK_W));
    obstacle_y = BLOCK_SIZE * (rand() % (MAP_BLOCK_H));
-   map[obstacle_x/BLOCK_SIZE][obstacle_y/BLOCK_SIZE].filled = true;
+   map.block[obstacle_x/BLOCK_SIZE][obstacle_y/BLOCK_SIZE].filled = true;
 
     while(!doexit)
     {
@@ -138,7 +138,7 @@ int main(int argc, char **argv)
             {
                 for (int j = 0; j < (MAP_BLOCK_H); j++)
                 {
-                    al_draw_bitmap_region(terrain, 32 * map[i][j].floor, 0, 32, 32, 32 * i, 32 * j, 0);
+                    al_draw_bitmap_region(terrain, 32 * map.block[i][j].floor, 0, 32, 32, 32 * i, 32 * j, 0);
                 }
             }
 
