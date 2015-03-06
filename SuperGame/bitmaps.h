@@ -1,11 +1,11 @@
 /*****************************************
-* game_bitmaps.h
+* bitmaps.h
 *
 * Constant strings for all game bitmaps
 *****************************************/
 
-#ifndef game_bitmaps_h
-#define game_bitmaps_h
+#ifndef bitmaps_h
+#define bitmaps_h
 
 /* Characters */
 #define MELEE_CHAR_BMP          "Bitmaps/MeleeChar.bmp"

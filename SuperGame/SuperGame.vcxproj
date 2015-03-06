@@ -73,9 +73,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="character.h" />
+    <ClInclude Include="consts.h" />
     <ClInclude Include="error.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="game_bitmaps.h" />
+    <ClInclude Include="bitmaps.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Bitmaps\MeleeChar.bmp" />

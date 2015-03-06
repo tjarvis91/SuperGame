@@ -8,32 +8,28 @@
 // Libraries
 #include <stdio.h>
 // Project Headers
-#include "game_bitmaps.h"
+#include "bitmaps.h"
+#include "character.h"
 #include "game.h"
 
 int main(int argc, char **argv)
 {
-    ALLEGRO_BITMAP *melee_char = NULL;
+    Character melee_char = Character((SCREEN_W / 2.0 - BLOCK_SIZE / 2.0), (SCREEN_H / 2.0 - BLOCK_SIZE / 2.0));
     ALLEGRO_BITMAP *terrain = NULL;
     ALLEGRO_BITMAP *obstacle = NULL;
-    int melee_char_x = SCREEN_W / 2.0 - BOUNCER_SIZE / 2.0;
-    int melee_char_y = SCREEN_H / 2.0 - BOUNCER_SIZE / 2.0;
     int try_x;
     int try_y;
     bool key[4] = { false, false, false, false };
     bool redraw = true;
     bool doexit = false;
-    int character_direction = 0;
-    MapTile map[SCREEN_W/32][SCREEN_H/32];
-    double character_speed = 4.0;
+    MapTile map[MAP_BLOCK_W][MAP_BLOCK_H];
     int obstacle_x = 0;
     int obstacle_y = 0;
     int obstacle_w = 32;
     int obstacle_h = 32;
-    int character_size = 32;
 
-   memset(map, 0, sizeof(map));
-   srand(time(NULL));
+    memset(map, 0, sizeof(map));
+    srand(time(NULL));
 
     Game g = Game();
     if(!g.Setup())
@@ -41,11 +37,9 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    melee_char = al_load_bitmap(MELEE_CHAR_PNG);
+    melee_char.SetBitmap(MELEE_CHAR_PNG);
     terrain = al_load_bitmap(WOOD_PNG);
     obstacle = al_load_bitmap(OBSTACLE_PNG);
-
-   al_convert_mask_to_alpha(melee_char, al_map_rgb(255, 0, 255));
 
    al_convert_mask_to_alpha(obstacle, al_map_rgb(255, 0, 255));
 
@@ -56,18 +50,18 @@ int main(int argc, char **argv)
    al_start_timer(g.timer);
 
    //This generates the map
-   for (int i = 0; i < (SCREEN_W / 32); i++)
+   for (int i = 0; i < (MAP_BLOCK_W); i++)
    {
-       for (int j = 0; j < (SCREEN_H / 32); j++)
+       for (int j = 0; j < (MAP_BLOCK_H); j++)
        {
            int k = rand() % 4;
            map[i][j].floor = k;
        }
    }
 
-   obstacle_x = 32 * (rand() % (SCREEN_W / 32));
-   obstacle_y = 32 * (rand() % (SCREEN_H / 32));
-   map[obstacle_x/32][obstacle_y/32].filled = true;
+   obstacle_x = BLOCK_SIZE * (rand() % (MAP_BLOCK_W));
+   obstacle_y = BLOCK_SIZE * (rand() % (MAP_BLOCK_H));
+   map[obstacle_x/BLOCK_SIZE][obstacle_y/BLOCK_SIZE].filled = true;
 
    while(!doexit)
    {
@@ -77,48 +71,48 @@ int main(int argc, char **argv)
       try_x = 0;
       try_y = 0;
       if(ev.type == ALLEGRO_EVENT_TIMER) {
-          if (key[UP] && melee_char_y >= character_speed)
+          if (key[UP] && melee_char.y >= melee_char.speed)
           {
-              try_y = -character_speed;
+              try_y = -melee_char.speed;
           }
 
-          if (key[DOWN] && melee_char_y <= SCREEN_H - BOUNCER_SIZE - character_speed )
+          if (key[DOWN] && melee_char.y <= SCREEN_H - BLOCK_SIZE - melee_char.speed )
           {
-               try_y = character_speed;
+               try_y = melee_char.speed;
           }
 
-          if (key[LEFT] && melee_char_x >= character_speed )
+          if (key[LEFT] && melee_char.x >= melee_char.speed )
           {
-             try_x = -character_speed;
+             try_x = -melee_char.speed;
           }
 
-          if (key[RIGHT] && melee_char_x <= SCREEN_W - BOUNCER_SIZE - character_speed )
+          if (key[RIGHT] && melee_char.x <= SCREEN_W - BLOCK_SIZE - melee_char.speed )
           {
-             try_x = character_speed;
+             try_x = melee_char.speed;
           }
 
-          if (!map[(melee_char_x + try_x) / 32][(melee_char_y + try_y) / 32].filled &&
-              !map[(melee_char_x + character_size + try_x) / 32][(melee_char_y + try_y) / 32].filled &&
-              !map[(melee_char_x + try_x) / 32][(melee_char_y + character_size + try_y) / 32].filled &&
-              !map[(melee_char_x + character_size + try_x) / 32][(melee_char_y + character_size + try_y) / 32].filled )
+          if (!map[(melee_char.x + try_x) / BLOCK_SIZE][(melee_char.y + try_y) / BLOCK_SIZE].filled &&
+              !map[(melee_char.x + melee_char.w + try_x) / BLOCK_SIZE][(melee_char.y + try_y) / BLOCK_SIZE].filled &&
+              !map[(melee_char.x + try_x) / BLOCK_SIZE][(melee_char.y + melee_char.h + try_y) / BLOCK_SIZE].filled &&
+              !map[(melee_char.x + melee_char.w + try_x) / BLOCK_SIZE][(melee_char.y + melee_char.h + try_y) / BLOCK_SIZE].filled )
           {
-              melee_char_x += try_x;
-              melee_char_y += try_y;
+              melee_char.x += try_x;
+              melee_char.y += try_y;
               if (try_y < 0)
               {
-                  character_direction = UP;
+                  melee_char.dir = UP;
               }
               else if (try_y > 0)
               {
-                  character_direction = DOWN;
+                  melee_char.dir = DOWN;
               }
               else if (try_x < 0)
               {
-                  character_direction = LEFT;
+                  melee_char.dir = LEFT;
               }
               else if (try_x > 0)
               {
-                  character_direction = RIGHT;
+                  melee_char.dir = RIGHT;
               }
           }
 
@@ -175,9 +169,9 @@ int main(int argc, char **argv)
 
 
          //This draws the map
-         for (int i = 0; i < (SCREEN_W / 32); i++)
+         for (int i = 0; i < (MAP_BLOCK_W); i++)
          {
-             for (int j = 0; j < (SCREEN_H / 32); j++)
+             for (int j = 0; j < (MAP_BLOCK_H); j++)
              {
                  al_draw_bitmap_region(terrain, 32 * map[i][j].floor, 0, 32, 32, 32 * i, 32 * j, 0);
              }
@@ -186,13 +180,13 @@ int main(int argc, char **argv)
          //This draws an obstacle
          al_draw_bitmap_region(obstacle, 0, 0, obstacle_w, obstacle_h, obstacle_x, obstacle_y, 0);
 
-             al_draw_bitmap_region(melee_char, character_size * character_direction, 0, character_size, character_size, melee_char_x, melee_char_y, 0);
+         melee_char.Draw();
 
          al_flip_display();
       }
    }
 
-   al_destroy_bitmap(melee_char);
+   al_destroy_bitmap(melee_char.image);
    al_destroy_bitmap(terrain);
    al_destroy_bitmap(obstacle);
    al_destroy_timer(g.timer);
