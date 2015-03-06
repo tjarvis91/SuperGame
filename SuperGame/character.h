@@ -70,10 +70,10 @@ int try_y = 0;
         direction = RIGHT;
     }
 
-    if (!map->block[(x + try_x) / BLOCK_SIZE][(y + try_y) / BLOCK_SIZE].filled &&
-        !map->block[(x + w + try_x) / BLOCK_SIZE][(y + try_y) / BLOCK_SIZE].filled &&
-        !map->block[(x + try_x) / BLOCK_SIZE][(y + h + try_y) / BLOCK_SIZE].filled &&
-        !map->block[(x + w + try_x) / BLOCK_SIZE][(y + h + try_y) / BLOCK_SIZE].filled )
+    if (!map->block[(x + try_x)     / BLOCK_SIZE][(y + try_y)     / BLOCK_SIZE].filled &&
+        !map->block[(x + try_x + w) / BLOCK_SIZE][(y + try_y)     / BLOCK_SIZE].filled &&
+        !map->block[(x + try_x)     / BLOCK_SIZE][(y + try_y + h) / BLOCK_SIZE].filled &&
+        !map->block[(x + try_x + w) / BLOCK_SIZE][(y + try_y + h) / BLOCK_SIZE].filled )
     {
         x += try_x;
         y += try_y;
