@@ -19,7 +19,7 @@
 #define MAP_BLOCK_W                 SCREEN_W / BLOCK_SIZE
 
 /* Enums */
-enum direction : int
+enum Direction : int
 {
     DOWN, UP, LEFT, RIGHT
 };
@@ -30,5 +30,8 @@ struct MapTile
     int floor;
     bool filled;
 };
+
+/* Globals */
+MapTile map[MAP_BLOCK_W][MAP_BLOCK_H];
 
 #endif

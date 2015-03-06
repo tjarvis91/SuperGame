@@ -14,10 +14,10 @@ class Character
 public:
     ALLEGRO_BITMAP *image;
     int x, y, w, h, speed;
-    direction dir;
+    Direction direction;
     Character(int, int);
     ~Character();
-    bool Move(int, int);
+    bool Move(bool[4]);
     void Draw();
     void SetBitmap(const char*);
 
@@ -30,7 +30,7 @@ Character::Character(int x_in, int y_in)
     speed = STANDARD_CHARACTER_SPEED;
     w = BLOCK_SIZE;
     h = BLOCK_SIZE;
-    dir = DOWN;
+    direction = DOWN;
     image = NULL;
 }
 
@@ -39,9 +39,63 @@ Character::~Character()
     al_destroy_bitmap(image);
 }
 
+bool Character::Move(bool dir[])
+{
+int try_x = 0;
+int try_y = 0;
+
+    if (dir[UP] && y >= speed)
+    {
+        try_y = -speed;
+    }
+
+    if (dir[DOWN] && y <= SCREEN_H - BLOCK_SIZE - speed )
+    {
+        try_y = speed;
+    }
+
+    if (dir[LEFT] && x >= speed )
+    {
+        try_x = -speed;
+    }
+
+    if (dir[RIGHT] && x <= SCREEN_W - BLOCK_SIZE - speed )
+    {
+        try_x = speed;
+    }
+
+    if (!map[(x + try_x) / BLOCK_SIZE][(y + try_y) / BLOCK_SIZE].filled &&
+        !map[(x + w + try_x) / BLOCK_SIZE][(y + try_y) / BLOCK_SIZE].filled &&
+        !map[(x + try_x) / BLOCK_SIZE][(y + h + try_y) / BLOCK_SIZE].filled &&
+        !map[(x + w + try_x) / BLOCK_SIZE][(y + h + try_y) / BLOCK_SIZE].filled )
+    {
+        x += try_x;
+        y += try_y;
+        if (try_y < 0)
+        {
+            direction = UP;
+        }
+        else if (try_y > 0)
+        {
+            direction = DOWN;
+        }
+        else if (try_x < 0)
+        {
+            direction = LEFT;
+        }
+        else if (try_x > 0)
+        {
+            direction = RIGHT;
+        }
+        return true;
+    }
+
+    return false;
+}
+
 void Character::Draw()
 {
-    al_draw_bitmap_region(image, w * dir, 0, w, h, x, y, 0);
+    al_draw_bitmap_region(image, w * direction, 0, w, h, x, y, 0);
 }
 
 void Character::SetBitmap(const char* file)

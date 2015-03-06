@@ -63,135 +63,99 @@ int main(int argc, char **argv)
    obstacle_y = BLOCK_SIZE * (rand() % (MAP_BLOCK_H));
    map[obstacle_x/BLOCK_SIZE][obstacle_y/BLOCK_SIZE].filled = true;
 
-   while(!doexit)
-   {
-      ALLEGRO_EVENT ev;
-      al_wait_for_event(g.event_queue, &ev);
+    while(!doexit)
+    {
+        ALLEGRO_EVENT ev;
+        al_wait_for_event(g.event_queue, &ev);
 
-      try_x = 0;
-      try_y = 0;
-      if(ev.type == ALLEGRO_EVENT_TIMER) {
-          if (key[UP] && melee_char.y >= melee_char.speed)
-          {
-              try_y = -melee_char.speed;
-          }
+        try_x = 0;
+        try_y = 0;
+        if(ev.type == ALLEGRO_EVENT_TIMER)
+        {
+            if ((key[UP] + key[DOWN] == 1) || (key[LEFT] + key[RIGHT]) == 1)
+                melee_char.Move(key);
 
-          if (key[DOWN] && melee_char.y <= SCREEN_H - BLOCK_SIZE - melee_char.speed )
-          {
-               try_y = melee_char.speed;
-          }
+            redraw = true;
+        }
+        else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+        {
+            break;
+        }
+        else if(ev.type == ALLEGRO_EVENT_KEY_DOWN)
+        {
+            switch(ev.keyboard.keycode)
+            {
+                case ALLEGRO_KEY_UP:
+                    key[UP] = true;
+                    break;
 
-          if (key[LEFT] && melee_char.x >= melee_char.speed )
-          {
-             try_x = -melee_char.speed;
-          }
+                case ALLEGRO_KEY_DOWN:
+                    key[DOWN] = true;
+                    break;
 
-          if (key[RIGHT] && melee_char.x <= SCREEN_W - BLOCK_SIZE - melee_char.speed )
-          {
-             try_x = melee_char.speed;
-          }
+                case ALLEGRO_KEY_LEFT:
+                    key[LEFT] = true;
+                    break;
 
-          if (!map[(melee_char.x + try_x) / BLOCK_SIZE][(melee_char.y + try_y) / BLOCK_SIZE].filled &&
-              !map[(melee_char.x + melee_char.w + try_x) / BLOCK_SIZE][(melee_char.y + try_y) / BLOCK_SIZE].filled &&
-              !map[(melee_char.x + try_x) / BLOCK_SIZE][(melee_char.y + melee_char.h + try_y) / BLOCK_SIZE].filled &&
-              !map[(melee_char.x + melee_char.w + try_x) / BLOCK_SIZE][(melee_char.y + melee_char.h + try_y) / BLOCK_SIZE].filled )
-          {
-              melee_char.x += try_x;
-              melee_char.y += try_y;
-              if (try_y < 0)
-              {
-                  melee_char.dir = UP;
-              }
-              else if (try_y > 0)
-              {
-                  melee_char.dir = DOWN;
-              }
-              else if (try_x < 0)
-              {
-                  melee_char.dir = LEFT;
-              }
-              else if (try_x > 0)
-              {
-                  melee_char.dir = RIGHT;
-              }
-          }
+                case ALLEGRO_KEY_RIGHT:
+                    key[RIGHT] = true;
+                    break;
+            }
+        }
+        else if(ev.type == ALLEGRO_EVENT_KEY_UP)
+        {
+            switch(ev.keyboard.keycode)
+            {
+                case ALLEGRO_KEY_UP:
+                    key[UP] = false;
+                    break;
 
-         redraw = true;
-      }
-      else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-         break;
-      }
-      else if(ev.type == ALLEGRO_EVENT_KEY_DOWN) {
-         switch(ev.keyboard.keycode) {
-            case ALLEGRO_KEY_UP:
-               key[UP] = true;
-               break;
+                case ALLEGRO_KEY_DOWN:
+                    key[DOWN] = false;
+                    break;
 
-            case ALLEGRO_KEY_DOWN:
-               key[DOWN] = true;
-               break;
+                case ALLEGRO_KEY_LEFT:
+                    key[LEFT] = false;
+                    break;
 
-            case ALLEGRO_KEY_LEFT:
-               key[LEFT] = true;
-               break;
+                case ALLEGRO_KEY_RIGHT:
+                    key[RIGHT] = false;
+                    break;
 
-            case ALLEGRO_KEY_RIGHT:
-               key[RIGHT] = true;
-               break;
-         }
-      }
-      else if(ev.type == ALLEGRO_EVENT_KEY_UP) {
-         switch(ev.keyboard.keycode) {
-            case ALLEGRO_KEY_UP:
-               key[UP] = false;
-               break;
+                case ALLEGRO_KEY_ESCAPE:
+                    doexit = true;
+                    break;
+            }
+        }
 
-            case ALLEGRO_KEY_DOWN:
-               key[DOWN] = false;
-               break;
-
-            case ALLEGRO_KEY_LEFT:
-               key[LEFT] = false;
-               break;
-
-            case ALLEGRO_KEY_RIGHT:
-               key[RIGHT] = false;
-               break;
-
-            case ALLEGRO_KEY_ESCAPE:
-               doexit = true;
-               break;
-         }
-      }
-
-      if(redraw && al_is_event_queue_empty(g.event_queue)) {
-         redraw = false;
+        if(redraw && al_is_event_queue_empty(g.event_queue))
+        {
+            redraw = false;
 
 
-         //This draws the map
-         for (int i = 0; i < (MAP_BLOCK_W); i++)
-         {
-             for (int j = 0; j < (MAP_BLOCK_H); j++)
-             {
-                 al_draw_bitmap_region(terrain, 32 * map[i][j].floor, 0, 32, 32, 32 * i, 32 * j, 0);
-             }
-         }
+            //This draws the map
+            for (int i = 0; i < (MAP_BLOCK_W); i++)
+            {
+                for (int j = 0; j < (MAP_BLOCK_H); j++)
+                {
+                    al_draw_bitmap_region(terrain, 32 * map[i][j].floor, 0, 32, 32, 32 * i, 32 * j, 0);
+                }
+            }
 
-         //This draws an obstacle
-         al_draw_bitmap_region(obstacle, 0, 0, obstacle_w, obstacle_h, obstacle_x, obstacle_y, 0);
+            //This draws an obstacle
+            al_draw_bitmap_region(obstacle, 0, 0, obstacle_w, obstacle_h, obstacle_x, obstacle_y, 0);
 
-         melee_char.Draw();
+            melee_char.Draw();
 
-         al_flip_display();
-      }
-   }
+            al_flip_display();
+        }
+    }
 
-   al_destroy_bitmap(melee_char.image);
-   al_destroy_bitmap(terrain);
-   al_destroy_bitmap(obstacle);
-   al_destroy_timer(g.timer);
-   al_destroy_display(g.display);
-   al_destroy_event_queue(g.event_queue);
+    al_destroy_bitmap(terrain);
+    al_destroy_bitmap(obstacle);
+    al_destroy_timer(g.timer);
+    al_destroy_display(g.display);
+    al_destroy_event_queue(g.event_queue);
 
-   return 0;
+    return 0;
 }
