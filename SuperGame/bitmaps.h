@@ -10,6 +10,8 @@
 /* Characters */
 #define MELEE_CHAR_BMP          "Bitmaps/MeleeChar.bmp"
 #define MELEE_CHAR_PNG          "Bitmaps/MeleeChar.png"
+#define ARCHER_CHAR_PNG			"Bitmaps/ArcherChar.png"
+#define MAGIC_CHAR_PNG			"Bitmaps/MagicChar.png"
 
 /* Obstacles */
 #define OBSTACLE_PNG            "Bitmaps/Obstacle.png"
