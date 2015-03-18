@@ -19,6 +19,7 @@
 #define MAP_BLOCK_W                 SCREEN_W / BLOCK_SIZE
 
 #define FOLLOW_BUFFER               10
+#define NUM_CHARACTERS              3
 
 /* Enums */
 enum Direction : int

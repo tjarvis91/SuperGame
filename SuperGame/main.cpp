@@ -18,6 +18,8 @@ int main(int argc, char **argv)
     Character melee_char  = Character(&map, (SCREEN_W / 2.0 - BLOCK_SIZE / 2.0), (SCREEN_H / 2.0 - BLOCK_SIZE / 2.0));
     Character archer_char = Character(&map, melee_char.x, melee_char.y);
     Character magic_char  = Character(&map, melee_char.x, melee_char.y);
+    Character *char_order[NUM_CHARACTERS] = {&melee_char, &archer_char, &magic_char};
+    Character *buffer;
     ALLEGRO_BITMAP *terrain = NULL;
     ALLEGRO_BITMAP *obstacle = NULL;
     int try_x;
@@ -77,10 +79,10 @@ int main(int argc, char **argv)
         {
             if ((key[UP] + key[DOWN] == 1) || (key[LEFT] + key[RIGHT]) == 1)
             {
-                if(melee_char.Move(key))
+                if(char_order[0]->Move(key))
                 {
-                    archer_char.Follow(melee_char.follow_x, melee_char.follow_y);
-                    magic_char.Follow(archer_char.follow_x, archer_char.follow_y);
+                    char_order[1]->Follow(char_order[0]->follow_x, char_order[0]->follow_y);
+                    char_order[2]->Follow(char_order[1]->follow_x, char_order[1]->follow_y);
                     redraw = true;
                 }
             }
@@ -130,6 +132,22 @@ int main(int argc, char **argv)
                     key[RIGHT] = false;
                     break;
 
+                case ALLEGRO_KEY_TAB:
+                    try_x = char_order[2]->x;
+                    try_y = char_order[2]->y;
+                    char_order[2]->x = char_order[1]->x;
+                    char_order[2]->y = char_order[1]->y;
+                    char_order[1]->x = char_order[0]->x;
+                    char_order[1]->y = char_order[0]->y;
+                    char_order[0]->x = try_x;
+                    char_order[0]->y = try_y;
+                    buffer = char_order[0];
+                    char_order[0] = char_order[1];
+                    char_order[1] = char_order[2];
+                    char_order[2] = buffer;
+                    redraw = true;
+                    break;
+
                 case ALLEGRO_KEY_ESCAPE:
                     doexit = true;
                     break;
@@ -139,7 +157,6 @@ int main(int argc, char **argv)
         if(redraw && al_is_event_queue_empty(g.event_queue))
         {
             redraw = false;
-
 
             //This draws the map
             for (int i = 0; i < (MAP_BLOCK_W); i++)
@@ -153,9 +170,9 @@ int main(int argc, char **argv)
             //This draws an obstacle
             al_draw_bitmap_region(obstacle, 0, 0, obstacle_w, obstacle_h, obstacle_x, obstacle_y, 0);
 
-            magic_char.Draw();
-            archer_char.Draw();
-            melee_char.Draw();
+            char_order[2]->Draw();
+            char_order[1]->Draw();
+            char_order[0]->Draw();
 
             al_flip_display();
         }
