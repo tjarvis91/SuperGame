@@ -15,11 +15,9 @@
 int main(int argc, char **argv)
 {
     Map map;
-    Character melee_char = Character(&map, (SCREEN_W / 2.0 - BLOCK_SIZE / 2.0), (SCREEN_H / 2.0 - BLOCK_SIZE / 2.0));
-	Character archer_char = Character(&map, (SCREEN_W / 2.0 - BLOCK_SIZE / 2.0) - 64, (SCREEN_H / 2.0 - BLOCK_SIZE / 2.0) - 64);
-	Character magic_char = Character(&map, (SCREEN_W / 2.0 - BLOCK_SIZE / 2.0) + 64, (SCREEN_H / 2.0 - BLOCK_SIZE / 2.0) + 64);
-	archer_char.speed = 5.0;
-	magic_char.speed = 3.0;
+    Character melee_char  = Character(&map, (SCREEN_W / 2.0 - BLOCK_SIZE / 2.0), (SCREEN_H / 2.0 - BLOCK_SIZE / 2.0));
+    Character archer_char = Character(&map, melee_char.x, melee_char.y);
+    Character magic_char  = Character(&map, melee_char.x, melee_char.y);
     ALLEGRO_BITMAP *terrain = NULL;
     ALLEGRO_BITMAP *obstacle = NULL;
     int try_x;
@@ -41,9 +39,9 @@ int main(int argc, char **argv)
         return -1;
     }
 
-	melee_char.SetBitmap(MELEE_CHAR_PNG);
-	archer_char.SetBitmap(ARCHER_CHAR_PNG);
-	magic_char.SetBitmap(MAGIC_CHAR_PNG);
+    melee_char.SetBitmap(MELEE_CHAR_PNG);
+    archer_char.SetBitmap(ARCHER_CHAR_PNG);
+    magic_char.SetBitmap(MAGIC_CHAR_PNG);
 
     terrain = al_load_bitmap(WOOD_PNG);
     obstacle = al_load_bitmap(OBSTACLE_PNG);
@@ -77,13 +75,15 @@ int main(int argc, char **argv)
 
         if(ev.type == ALLEGRO_EVENT_TIMER)
         {
-			if ((key[UP] + key[DOWN] == 1) || (key[LEFT] + key[RIGHT]) == 1)
-			{
-			    melee_char.Move(key);
-				archer_char.Move(key);
-				magic_char.Move(key);
-				redraw = true;
-			}
+            if ((key[UP] + key[DOWN] == 1) || (key[LEFT] + key[RIGHT]) == 1)
+            {
+                if(melee_char.Move(key))
+                {
+                    archer_char.Follow(melee_char.follow_x, melee_char.follow_y);
+                    magic_char.Follow(archer_char.follow_x, archer_char.follow_y);
+                    redraw = true;
+                }
+            }
         }
         else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
         {
@@ -146,16 +146,16 @@ int main(int argc, char **argv)
             {
                 for (int j = 0; j < (MAP_BLOCK_H); j++)
                 {
-					al_draw_bitmap_region(terrain, BLOCK_SIZE * map.block[i][j].floor, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                    al_draw_bitmap_region(terrain, BLOCK_SIZE * map.block[i][j].floor, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
                 }
             }
 
             //This draws an obstacle
             al_draw_bitmap_region(obstacle, 0, 0, obstacle_w, obstacle_h, obstacle_x, obstacle_y, 0);
 
+            magic_char.Draw();
+            archer_char.Draw();
             melee_char.Draw();
-			archer_char.Draw();
-			magic_char.Draw();
 
             al_flip_display();
         }

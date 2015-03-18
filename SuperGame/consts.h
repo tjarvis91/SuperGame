@@ -18,6 +18,8 @@
 #define MAP_BLOCK_H                 SCREEN_H / BLOCK_SIZE
 #define MAP_BLOCK_W                 SCREEN_W / BLOCK_SIZE
 
+#define FOLLOW_BUFFER               10
+
 /* Enums */
 enum Direction : int
 {
