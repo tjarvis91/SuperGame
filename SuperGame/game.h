@@ -12,9 +12,14 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
+#include <iostream>
+#include <fstream>
+#include <string>
 // Project Headers
 #include "consts.h"
 #include "error.h"
+
+using namespace std;
 
 /* Classes */
 class Game
@@ -23,7 +28,9 @@ public:
     ALLEGRO_DISPLAY     *display;
     ALLEGRO_EVENT_QUEUE *event_queue;
     ALLEGRO_TIMER       *timer;
+    Map map;
     Game();
+    void ParseMap(const char*);
     int Setup();
     void ShutDown(){};
 };
@@ -33,41 +40,93 @@ Game::Game()
     timer = NULL;
     display = NULL;
     event_queue = NULL;
+    memset(&map, 0, sizeof(map));
+}
+
+void Game::ParseMap(const char *file)
+{
+string line;
+ifstream map_file(file);
+
+    if(!map_file.is_open())
+        error("map_file.open() failed in Game.ParseMap()");
+
+    for(int i = 0; i < MAP_BLOCK_H; i++)
+    {
+        getline(map_file, line);
+        for(int j = 0; j < MAP_BLOCK_W; j++)
+        {
+            map.ground.tile[j][i] = line[j]-48;
+        }
+    }
+    getline(map_file, line);
+
+    for(int i = 0; i < MAP_BLOCK_H; i++)
+    {
+        getline(map_file, line);
+        for(int j = 0; j < MAP_BLOCK_W; j++)
+        {
+            map.low_mid.tile[j][i] = line[j]-48;
+        }
+    }
+    getline(map_file, line);
+
+    for(int i = 0; i < MAP_BLOCK_H; i++)
+    {
+        getline(map_file, line);
+        for(int j = 0; j < MAP_BLOCK_W; j++)
+        {
+            map.high_mid.tile[j][i] = line[j]-48;
+        }
+    }
+    getline(map_file, line);
+
+    for(int i = 0; i < MAP_BLOCK_H; i++)
+    {
+        getline(map_file, line);
+        for(int j = 0; j < MAP_BLOCK_W; j++)
+        {
+            map.obstacle.tile[j][i] = line[j]-48;
+        }
+    }
+    getline(map_file, line);
+
+    map_file.close();
 }
 
 int Game::Setup()
 {
     if(!al_init())
     {
-        return error("al_init() failed in main_setup()");
+        return error("al_init() failed in Game.Setup()");
     }
 
     if(!al_init_image_addon())
     {
-        return error("al_init_image_addon() failed in main_setup()");
+        return error("al_init_image_addon() failed in Game.Setup()");
     }
 
     if(!al_install_keyboard())
     {
-        return error("al_install_keyboard() failed in main_setup()");
+        return error("al_install_keyboard() failed in Game.Setup()");
     }
 
     timer = al_create_timer(1.0 / FRAMES_PER_SECOND);
     if(!timer)
     {
-        return error("al_create_timer() failed in main()");
+        return error("al_create_timer() failed in Game.Setup()");
     }
 
     display = al_create_display(SCREEN_W, SCREEN_H);
     if(!display)
     {
-        return error("al_create_display() failed in main()");
+        return error("al_create_display() failed in Game.Setup()");
     }
 
     event_queue = al_create_event_queue();
     if(!event_queue)
     {
-        return error("al_create_event_queue() failed in main()");
+        return error("al_create_event_queue() failed in Game.Setup()");
     }
 
     al_register_event_source(event_queue, al_get_display_event_source(display));

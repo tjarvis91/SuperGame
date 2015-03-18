@@ -93,10 +93,10 @@ int try_y = 0;
         direction = RIGHT;
     }
 
-    if (!map->block[(x + try_x)     / BLOCK_SIZE][(y + try_y)     / BLOCK_SIZE].filled &&
-        !map->block[(x + try_x + w) / BLOCK_SIZE][(y + try_y)     / BLOCK_SIZE].filled &&
-        !map->block[(x + try_x)     / BLOCK_SIZE][(y + try_y + h) / BLOCK_SIZE].filled &&
-        !map->block[(x + try_x + w) / BLOCK_SIZE][(y + try_y + h) / BLOCK_SIZE].filled )
+    if (map->obstacle.tile[(x + try_x)     / BLOCK_SIZE][(y + try_y)     / BLOCK_SIZE] == 0 &&
+        map->obstacle.tile[(x + try_x + w) / BLOCK_SIZE][(y + try_y)     / BLOCK_SIZE] == 0 &&
+        map->obstacle.tile[(x + try_x)     / BLOCK_SIZE][(y + try_y + h) / BLOCK_SIZE] == 0 &&
+        map->obstacle.tile[(x + try_x + w) / BLOCK_SIZE][(y + try_y + h) / BLOCK_SIZE] == 0 )
     {
         x += try_x;
         y += try_y;

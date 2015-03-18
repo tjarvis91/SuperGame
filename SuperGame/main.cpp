@@ -14,14 +14,19 @@
 
 int main(int argc, char **argv)
 {
-    Map map;
-    Character melee_char  = Character(&map, (SCREEN_W / 2.0 - BLOCK_SIZE / 2.0), (SCREEN_H / 2.0 - BLOCK_SIZE / 2.0));
-    Character archer_char = Character(&map, melee_char.x, melee_char.y);
-    Character magic_char  = Character(&map, melee_char.x, melee_char.y);
+    Game g = Game();
+    if(!g.Setup())
+    {
+        return -1;
+    }
+
+    Character melee_char  = Character(&g.map, (SCREEN_W / 2.0 - BLOCK_SIZE / 2.0), (SCREEN_H / 2.0 - BLOCK_SIZE / 2.0));
+    Character archer_char = Character(&g.map, melee_char.x, melee_char.y);
+    Character magic_char  = Character(&g.map, melee_char.x, melee_char.y);
     Character *char_order[NUM_CHARACTERS] = {&melee_char, &archer_char, &magic_char};
     Character *buffer;
-    ALLEGRO_BITMAP *terrain = NULL;
-    ALLEGRO_BITMAP *obstacle = NULL;
+    ALLEGRO_BITMAP *terrain[] = {al_load_bitmap(WOOD_PNG), al_load_bitmap(GRASS_PNG), al_load_bitmap(COBBLESTONE_PNG)};
+    ALLEGRO_BITMAP *obstacle[] = {al_load_bitmap(OBSTACLE_PNG)};
     int try_x;
     int try_y;
     bool key[4] = { false, false, false, false };
@@ -32,23 +37,15 @@ int main(int argc, char **argv)
     int obstacle_w = 32;
     int obstacle_h = 32;
 
-    memset(&map, 0, sizeof(map));
+    //memset(&g.map, 0, sizeof(map));
+    g.ParseMap("Maps/test_parsing.mp");
     srand(time(NULL));
-
-    Game g = Game();
-    if(!g.Setup())
-    {
-        return -1;
-    }
 
     melee_char.SetBitmap(MELEE_CHAR_PNG);
     archer_char.SetBitmap(ARCHER_CHAR_PNG);
     magic_char.SetBitmap(MAGIC_CHAR_PNG);
 
-    terrain = al_load_bitmap(WOOD_PNG);
-    obstacle = al_load_bitmap(OBSTACLE_PNG);
-
-   al_convert_mask_to_alpha(obstacle, al_map_rgb(255, 0, 255));
+   al_convert_mask_to_alpha(obstacle[0], al_map_rgb(255, 0, 255));
 
    al_set_target_bitmap(al_get_backbuffer(g.display));
 
@@ -56,19 +53,19 @@ int main(int argc, char **argv)
 
    al_start_timer(g.timer);
 
-   //This generates the map
-   for (int i = 0; i < (MAP_BLOCK_W); i++)
-   {
-       for (int j = 0; j < (MAP_BLOCK_H); j++)
-       {
-           int k = rand() % 4;
-           map.block[i][j].floor = k;
-       }
-   }
+  //This generates the map
+  //for (int i = 0; i < (MAP_BLOCK_W); i++)
+  // {
+  //     for (int j = 0; j < (MAP_BLOCK_H); j++)
+  //     {
+  //         int k = rand() % 4;
+  //         map.block[i][j].floor = k;
+  //     }
+  // }
 
-   obstacle_x = BLOCK_SIZE * (rand() % (MAP_BLOCK_W));
-   obstacle_y = BLOCK_SIZE * (rand() % (MAP_BLOCK_H));
-   map.block[obstacle_x/BLOCK_SIZE][obstacle_y/BLOCK_SIZE].filled = true;
+  // obstacle_x = BLOCK_SIZE * (rand() % (MAP_BLOCK_W));
+  // obstacle_y = BLOCK_SIZE * (rand() % (MAP_BLOCK_H));
+  // map.block[obstacle_x/BLOCK_SIZE][obstacle_y/BLOCK_SIZE].filled = true;
 
     while(!doexit)
     {
@@ -158,28 +155,57 @@ int main(int argc, char **argv)
         {
             redraw = false;
 
-            //This draws the map
+            //Draw ground layer
             for (int i = 0; i < (MAP_BLOCK_W); i++)
             {
                 for (int j = 0; j < (MAP_BLOCK_H); j++)
                 {
-                    al_draw_bitmap_region(terrain, BLOCK_SIZE * map.block[i][j].floor, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                    al_draw_bitmap_region(terrain[g.map.ground.tile[i][j]], BLOCK_SIZE * 0, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
                 }
             }
 
-            //This draws an obstacle
-            al_draw_bitmap_region(obstacle, 0, 0, obstacle_w, obstacle_h, obstacle_x, obstacle_y, 0);
+            //Draw low_mid layer
+            for (int i = 0; i < (MAP_BLOCK_W); i++)
+            {
+                for (int j = 0; j < (MAP_BLOCK_H); j++)
+                {
+                    al_draw_bitmap_region(terrain[g.map.low_mid.tile[i][j]], BLOCK_SIZE * 0, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                }
+            }
 
+            //Draw characters
             char_order[2]->Draw();
             char_order[1]->Draw();
             char_order[0]->Draw();
+
+            //Draw high_mid layer
+            for (int i = 0; i < (MAP_BLOCK_W); i++)
+            {
+                for (int j = 0; j < (MAP_BLOCK_H); j++)
+                {
+                    if( g.map.high_mid.tile[i][j] != 0)
+                        al_draw_bitmap_region(terrain[g.map.high_mid.tile[i][j] - 1], BLOCK_SIZE * 0, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                }
+            }
+
+            //Draw obstacle layer
+            for (int i = 0; i < (MAP_BLOCK_W); i++)
+            {
+                for (int j = 0; j < (MAP_BLOCK_H); j++)
+                {
+                    if( g.map.obstacle.tile[i][j] != 0)
+                        al_draw_bitmap_region(obstacle[g.map.obstacle.tile[i][j] - 1], BLOCK_SIZE * 0, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                }
+            }
 
             al_flip_display();
         }
     }
 
-    al_destroy_bitmap(terrain);
-    al_destroy_bitmap(obstacle);
+    al_destroy_bitmap(terrain[0]);
+    al_destroy_bitmap(terrain[1]);
+    al_destroy_bitmap(terrain[2]);
+    al_destroy_bitmap(obstacle[0]);
     al_destroy_timer(g.timer);
     al_destroy_display(g.display);
     al_destroy_event_queue(g.event_queue);
