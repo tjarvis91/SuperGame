@@ -156,7 +156,7 @@ int main(int argc, char **argv)
                 }
             }
 
-            //Draw low_mid layer
+            //Draw low layer
             for (int i = 0; i < (MAP_BLOCK_W); i++)
             {
                 for (int j = 0; j < (MAP_BLOCK_H); j++)
@@ -171,16 +171,6 @@ int main(int argc, char **argv)
             char_order[1]->Draw();
             char_order[0]->Draw();
 
-            //Draw high_mid layer
-            for (int i = 0; i < (MAP_BLOCK_W); i++)
-            {
-                for (int j = 0; j < (MAP_BLOCK_H); j++)
-                {
-                    if( g.map.high.tile[i][j].type != 0)
-                        al_draw_bitmap_region(terrain[g.map.high.tile[i][j].type - 1], BLOCK_SIZE * g.map.high.tile[i][j].variant, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
-                }
-            }
-
             //Draw obstacle layer
             for (int i = 0; i < (MAP_BLOCK_W); i++)
             {
@@ -192,6 +182,16 @@ int main(int argc, char **argv)
             }
 
             al_flip_display();
+
+            //Draw high layer
+            for (int i = 0; i < (MAP_BLOCK_W); i++)
+            {
+                for (int j = 0; j < (MAP_BLOCK_H); j++)
+                {
+                    if( g.map.high.tile[i][j].type != 0)
+                        al_draw_bitmap_region(terrain[g.map.high.tile[i][j].type - 1], BLOCK_SIZE * g.map.high.tile[i][j].variant, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                }
+            }
         }
     }
 
