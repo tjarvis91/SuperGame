@@ -27,8 +27,6 @@ int main(int argc, char **argv)
     Character *buffer;
     ALLEGRO_BITMAP *terrain[] = {al_load_bitmap(WOOD_PNG), al_load_bitmap(GRASS_PNG), al_load_bitmap(COBBLESTONE_PNG)};
     ALLEGRO_BITMAP *obstacle[] = {al_load_bitmap(OBSTACLE_PNG)};
-    int try_x;
-    int try_y;
     bool key[4] = { false, false, false, false };
     bool redraw = true;
     bool doexit = false;
@@ -78,8 +76,8 @@ int main(int argc, char **argv)
             {
                 if(char_order[0]->Move(key))
                 {
-                    char_order[1]->Follow(char_order[0]->follow_x, char_order[0]->follow_y);
-                    char_order[2]->Follow(char_order[1]->follow_x, char_order[1]->follow_y);
+                    char_order[1]->Follow(char_order[0]);
+                    char_order[2]->Follow(char_order[1]);
                     redraw = true;
                 }
             }
@@ -130,14 +128,8 @@ int main(int argc, char **argv)
                     break;
 
                 case ALLEGRO_KEY_TAB:
-                    try_x = char_order[2]->x;
-                    try_y = char_order[2]->y;
-                    char_order[2]->x = char_order[1]->x;
-                    char_order[2]->y = char_order[1]->y;
-                    char_order[1]->x = char_order[0]->x;
-                    char_order[1]->y = char_order[0]->y;
-                    char_order[0]->x = try_x;
-                    char_order[0]->y = try_y;
+                    char_order[0]->SwapPlacement(char_order[1]);
+                    char_order[0]->SwapPlacement(char_order[2]);
                     buffer = char_order[0];
                     char_order[0] = char_order[1];
                     char_order[1] = char_order[2];
@@ -160,7 +152,7 @@ int main(int argc, char **argv)
             {
                 for (int j = 0; j < (MAP_BLOCK_H); j++)
                 {
-                    al_draw_bitmap_region(terrain[g.map.ground.tile[i][j]], BLOCK_SIZE * 0, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                    al_draw_bitmap_region(terrain[g.map.ground.tile[i][j].type], BLOCK_SIZE * g.map.ground.tile[i][j].variant, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
                 }
             }
 
@@ -169,7 +161,8 @@ int main(int argc, char **argv)
             {
                 for (int j = 0; j < (MAP_BLOCK_H); j++)
                 {
-                    al_draw_bitmap_region(terrain[g.map.low_mid.tile[i][j]], BLOCK_SIZE * 0, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                    if(g.map.low.tile[i][j].type != 0)
+                        al_draw_bitmap_region(terrain[g.map.low.tile[i][j].type - 1], BLOCK_SIZE * g.map.low.tile[i][j].variant, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
                 }
             }
 
@@ -183,8 +176,8 @@ int main(int argc, char **argv)
             {
                 for (int j = 0; j < (MAP_BLOCK_H); j++)
                 {
-                    if( g.map.high_mid.tile[i][j] != 0)
-                        al_draw_bitmap_region(terrain[g.map.high_mid.tile[i][j] - 1], BLOCK_SIZE * 0, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                    if( g.map.high.tile[i][j].type != 0)
+                        al_draw_bitmap_region(terrain[g.map.high.tile[i][j].type - 1], BLOCK_SIZE * g.map.high.tile[i][j].variant, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
                 }
             }
 
@@ -193,8 +186,8 @@ int main(int argc, char **argv)
             {
                 for (int j = 0; j < (MAP_BLOCK_H); j++)
                 {
-                    if( g.map.obstacle.tile[i][j] != 0)
-                        al_draw_bitmap_region(obstacle[g.map.obstacle.tile[i][j] - 1], BLOCK_SIZE * 0, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                    if( g.map.obstacle.tile[i][j].type != 0)
+                        al_draw_bitmap_region(obstacle[g.map.obstacle.tile[i][j].type - 1], BLOCK_SIZE * g.map.obstacle.tile[i][j].variant, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
                 }
             }
 

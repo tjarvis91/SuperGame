@@ -28,16 +28,22 @@ enum Direction : int
 };
 
 /* Structs */
+struct MapTile
+{
+    int type;
+    int variant;
+};
+
 struct MapLayer
 {
-    int tile[MAP_BLOCK_W][MAP_BLOCK_H];
+    MapTile tile[MAP_BLOCK_W][MAP_BLOCK_H];
 };
 
 struct Map
 {
     MapLayer ground;
-    MapLayer low_mid;
-    MapLayer high_mid;
+    MapLayer low;
+    MapLayer high;
     MapLayer obstacle;
 };
 

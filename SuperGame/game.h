@@ -56,7 +56,8 @@ ifstream map_file(file);
         getline(map_file, line);
         for(int j = 0; j < MAP_BLOCK_W; j++)
         {
-            map.ground.tile[j][i] = line[j]-48;
+            map.ground.tile[j][i].type = line[2*j]-48;
+            map.ground.tile[j][i].variant = line[2*j + 1]-48;
         }
     }
     getline(map_file, line);
@@ -66,7 +67,8 @@ ifstream map_file(file);
         getline(map_file, line);
         for(int j = 0; j < MAP_BLOCK_W; j++)
         {
-            map.low_mid.tile[j][i] = line[j]-48;
+            map.low.tile[j][i].type = line[2*j]-48;
+            map.low.tile[j][i].variant = line[2*j + 1]-48;
         }
     }
     getline(map_file, line);
@@ -76,7 +78,8 @@ ifstream map_file(file);
         getline(map_file, line);
         for(int j = 0; j < MAP_BLOCK_W; j++)
         {
-            map.high_mid.tile[j][i] = line[j]-48;
+            map.high.tile[j][i].type = line[2*j]-48;
+            map.high.tile[j][i].variant = line[2*j + 1]-48;
         }
     }
     getline(map_file, line);
@@ -86,7 +89,8 @@ ifstream map_file(file);
         getline(map_file, line);
         for(int j = 0; j < MAP_BLOCK_W; j++)
         {
-            map.obstacle.tile[j][i] = line[j]-48;
+            map.obstacle.tile[j][i].type = line[2*j]-48;
+            map.obstacle.tile[j][i].variant = line[2*j + 1]-48;
         }
     }
     getline(map_file, line);
