@@ -14,7 +14,7 @@
 
 int main(int argc, char **argv)
 {
-    Game g = Game();
+    Game g = Game("SuperGame: A Game of Super Fun!");
     if(!g.Setup())
     {
         return -1;

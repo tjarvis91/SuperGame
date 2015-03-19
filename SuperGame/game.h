@@ -29,17 +29,19 @@ public:
     ALLEGRO_EVENT_QUEUE *event_queue;
     ALLEGRO_TIMER       *timer;
     Map map;
-    Game();
+    char *title;
+    Game(char *);
     void ParseMap(const char*);
     int Setup();
     void ShutDown(){};
 };
 
-Game::Game()
+Game::Game(char *title_in)
 {
     timer = NULL;
     display = NULL;
     event_queue = NULL;
+    title = title_in;
     memset(&map, 0, sizeof(map));
 }
 
@@ -132,6 +134,8 @@ int Game::Setup()
     {
         return error("al_create_event_queue() failed in Game.Setup()");
     }
+
+    al_set_window_title(display, title);
 
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
