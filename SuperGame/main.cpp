@@ -15,7 +15,7 @@
 int main(int argc, char **argv)
 {
     Game g = Game("SuperGame: A Game of Super Fun!");
-    if(!g.Setup())
+    if(!g.Setup(SCREEN_W, SCREEN_H))
     {
         return -1;
     }

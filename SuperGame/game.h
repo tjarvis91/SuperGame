@@ -32,7 +32,7 @@ public:
     char *title;
     Game(char *);
     void ParseMap(const char*);
-    int Setup();
+    int Setup(int, int);
     void ShutDown(){};
 };
 
@@ -100,7 +100,7 @@ ifstream map_file(file);
     map_file.close();
 }
 
-int Game::Setup()
+int Game::Setup(int w, int h)
 {
     if(!al_init())
     {
@@ -123,7 +123,7 @@ int Game::Setup()
         return error("al_create_timer() failed in Game.Setup()");
     }
 
-    display = al_create_display(SCREEN_W, SCREEN_H);
+    display = al_create_display(w, h);
     if(!display)
     {
         return error("al_create_display() failed in Game.Setup()");
