@@ -15,8 +15,11 @@
 #define SCREEN_W                    640
 #define STANDARD_CHARACTER_SPEED    4.0
 
-#define MAP_BLOCK_H                 SCREEN_H / BLOCK_SIZE //15
-#define MAP_BLOCK_W                 SCREEN_W / BLOCK_SIZE //20
+#define MAP_BLOCK_H                 75
+#define MAP_BLOCK_W                 100
+
+#define MAP_BLOCK_DRAWN_H           SCREEN_H / BLOCK_SIZE //15
+#define MAP_BLOCK_DRAWN_W           SCREEN_W / BLOCK_SIZE //20
 
 #define FOLLOW_BUFFER               10
 #define NUM_CHARACTERS              3

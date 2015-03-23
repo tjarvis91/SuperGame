@@ -20,23 +20,23 @@ int main(int argc, char **argv)
         return -1;
     }
 
+    ALLEGRO_BITMAP *terrain[] = {al_load_bitmap(WOOD_PNG), al_load_bitmap(GRASS_PNG), al_load_bitmap(COBBLESTONE_PNG)};
+    ALLEGRO_BITMAP *obstacle[] = {al_load_bitmap(OBSTACLE_PNG)};
     Character melee_char  = Character(&g.map, (SCREEN_W / 2.0 - BLOCK_SIZE / 2.0), (SCREEN_H / 2.0 - BLOCK_SIZE / 2.0));
     Character archer_char = Character(&g.map, melee_char.x, melee_char.y);
     Character magic_char  = Character(&g.map, melee_char.x, melee_char.y);
     Character *char_order[NUM_CHARACTERS] = {&melee_char, &archer_char, &magic_char};
     Character *buffer;
-    ALLEGRO_BITMAP *terrain[] = {al_load_bitmap(WOOD_PNG), al_load_bitmap(GRASS_PNG), al_load_bitmap(COBBLESTONE_PNG)};
-    ALLEGRO_BITMAP *obstacle[] = {al_load_bitmap(OBSTACLE_PNG)};
     bool key[4] = { false, false, false, false };
     bool redraw = true;
-    bool doexit = false;
+    bool exit = false;
     int obstacle_x = 0;
     int obstacle_y = 0;
     int obstacle_w = 32;
     int obstacle_h = 32;
+    int start_x, start_y, tile_start_x, tile_start_y;
 
-    //memset(&g.map, 0, sizeof(map));
-    g.ParseMap("Maps/test_parsing.mp");
+    g.ParseMap("Maps/test_large_map.mp");
     srand(time(NULL));
 
     melee_char.SetBitmap(MELEE_CHAR_PNG);
@@ -44,28 +44,11 @@ int main(int argc, char **argv)
     magic_char.SetBitmap(MAGIC_CHAR_PNG);
 
    al_convert_mask_to_alpha(obstacle[0], al_map_rgb(255, 0, 255));
-
    al_set_target_bitmap(al_get_backbuffer(g.display));
-
    al_flip_display();
-
    al_start_timer(g.timer);
 
-  //This generates the map
-  //for (int i = 0; i < (MAP_BLOCK_W); i++)
-  // {
-  //     for (int j = 0; j < (MAP_BLOCK_H); j++)
-  //     {
-  //         int k = rand() % 4;
-  //         map.block[i][j].floor = k;
-  //     }
-  // }
-
-  // obstacle_x = BLOCK_SIZE * (rand() % (MAP_BLOCK_W));
-  // obstacle_y = BLOCK_SIZE * (rand() % (MAP_BLOCK_H));
-  // map.block[obstacle_x/BLOCK_SIZE][obstacle_y/BLOCK_SIZE].filled = true;
-
-    while(!doexit)
+    while(!exit)
     {
         ALLEGRO_EVENT ev;
         al_wait_for_event(g.event_queue, &ev);
@@ -143,21 +126,33 @@ int main(int argc, char **argv)
                     break;
 
                 case ALLEGRO_KEY_ESCAPE:
-                    doexit = true;
+                    exit = true;
                     break;
             }
         }
 
         if(redraw && al_is_event_queue_empty(g.event_queue))
         {
-            redraw = false;
+            start_x = max(char_order[0]->x - ((MAP_BLOCK_DRAWN_W * BLOCK_SIZE)/2), 0);
+            start_x = min(char_order[0]->x - ((MAP_BLOCK_DRAWN_W * BLOCK_SIZE)/2), ((MAP_BLOCK_W - MAP_BLOCK_DRAWN_W) * BLOCK_SIZE));
+            start_y = max(char_order[0]->y - ((MAP_BLOCK_DRAWN_H * BLOCK_SIZE)/2), 0);
+            start_y = min(char_order[0]->y - ((MAP_BLOCK_DRAWN_H * BLOCK_SIZE)/2), ((MAP_BLOCK_H - MAP_BLOCK_DRAWN_H) * BLOCK_SIZE));
+            tile_start_x = start_x % BLOCK_SIZE;
+            tile_start_y = start_y % BLOCK_SIZE;
 
             //Draw ground layer
-            for (int i = 0; i < (MAP_BLOCK_W); i++)
+            for(int i = start_x / BLOCK_SIZE; i < (start_x / BLOCK_SIZE) + MAP_BLOCK_DRAWN_W; i++)
             {
-                for (int j = 0; j < (MAP_BLOCK_H); j++)
+                for (int j = start_y / BLOCK_SIZE; j < (start_y / BLOCK_SIZE) + MAP_BLOCK_DRAWN_H; j++)
                 {
-                    al_draw_bitmap_region(terrain[g.map.ground.tile[i][j].type], BLOCK_SIZE * g.map.ground.tile[i][j].variant, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                    al_draw_bitmap_region(terrain[g.map.ground.tile[i][j].type],
+                                            BLOCK_SIZE * g.map.ground.tile[i][j].variant,
+                                            0,
+                                            BLOCK_SIZE - tile_start_x,
+                                            BLOCK_SIZE - tile_start_y,
+                                            BLOCK_SIZE * i,
+                                            BLOCK_SIZE * j,
+                                            0);
                 }
             }
 
@@ -167,7 +162,14 @@ int main(int argc, char **argv)
                 for (int j = 0; j < (MAP_BLOCK_H); j++)
                 {
                     if(g.map.low.tile[i][j].type != 0)
-                        al_draw_bitmap_region(terrain[g.map.low.tile[i][j].type - 1], BLOCK_SIZE * g.map.low.tile[i][j].variant, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                        al_draw_bitmap_region(terrain[g.map.low.tile[i][j].type - 1],
+                                                BLOCK_SIZE * g.map.low.tile[i][j].variant,
+                                                0,
+                                                BLOCK_SIZE - tile_start_x,
+                                                BLOCK_SIZE - tile_start_y,
+                                                BLOCK_SIZE * i,
+                                                BLOCK_SIZE * j,
+                                                0);
                 }
             }
 
@@ -182,11 +184,16 @@ int main(int argc, char **argv)
                 for (int j = 0; j < (MAP_BLOCK_H); j++)
                 {
                     if( g.map.obstacle.tile[i][j].type != 0)
-                        al_draw_bitmap_region(obstacle[g.map.obstacle.tile[i][j].type - 1], BLOCK_SIZE * g.map.obstacle.tile[i][j].variant, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                        al_draw_bitmap_region(terrain[g.map.obstacle.tile[i][j].type - 1],
+                                                BLOCK_SIZE * g.map.obstacle.tile[i][j].variant,
+                                                0,
+                                                BLOCK_SIZE - tile_start_x,
+                                                BLOCK_SIZE - tile_start_y,
+                                                BLOCK_SIZE * i,
+                                                BLOCK_SIZE * j,
+                                                0);
                 }
             }
-
-            al_flip_display();
 
             //Draw high layer
             for (int i = 0; i < (MAP_BLOCK_W); i++)
@@ -194,9 +201,19 @@ int main(int argc, char **argv)
                 for (int j = 0; j < (MAP_BLOCK_H); j++)
                 {
                     if( g.map.high.tile[i][j].type != 0)
-                        al_draw_bitmap_region(terrain[g.map.high.tile[i][j].type - 1], BLOCK_SIZE * g.map.high.tile[i][j].variant, 0, BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * i, BLOCK_SIZE * j, 0);
+                        al_draw_bitmap_region(terrain[g.map.high.tile[i][j].type - 1],
+                                                BLOCK_SIZE * g.map.high.tile[i][j].variant,
+                                                0,
+                                                BLOCK_SIZE - char_order[0]->x % BLOCK_SIZE,
+                                                BLOCK_SIZE - char_order[0]->y % BLOCK_SIZE,
+                                                BLOCK_SIZE * i,
+                                                BLOCK_SIZE * j,
+                                                0);
                 }
             }
+
+            al_flip_display();
+
         }
     }
 
