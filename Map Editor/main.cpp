@@ -16,10 +16,10 @@
 
 int main(int argc, char **argv)
 {
-boolean exit = false;
+boolean exit, redraw = false;
 
     Game g = Game("Map Editor");
-    if(!g.Setup())
+    if(!g.Setup(MAP_EDITOR_W, MAP_EDITOR_H))
     {
         return -1;
     }
@@ -38,6 +38,11 @@ boolean exit = false;
         if(ev.type == ALLEGRO_EVENT_TIMER)
         {
 
+        }
+        else if(ev.type == ALLEGRO_EVENT_DISPLAY_RESIZE)
+        {
+            g.Resize();
+            redraw = true;
         }
         else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
         {

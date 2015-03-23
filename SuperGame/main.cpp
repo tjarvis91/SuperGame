@@ -82,6 +82,11 @@ int main(int argc, char **argv)
                 }
             }
         }
+        else if(ev.type == ALLEGRO_EVENT_DISPLAY_RESIZE)
+        {
+            g.Resize();
+            redraw = true;
+        }
         else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
         {
             break;
