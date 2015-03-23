@@ -76,19 +76,19 @@ int try_y = 0;
         direction = UP;
     }
 
-    if (dir[DOWN] && y <= SCREEN_H - BLOCK_SIZE - speed )
+    if (dir[DOWN] && y <= ((map->h - 1) * BLOCK_SIZE) - speed )
     {
         try_y = speed;
         direction = DOWN;
     }
 
-    if (dir[LEFT] && x >= speed )
+    if (dir[LEFT] && x >= speed)
     {
         try_x = -speed;
         direction = LEFT;
     }
 
-    if (dir[RIGHT] && x <= SCREEN_W - BLOCK_SIZE - speed )
+    if(dir[RIGHT] && x <= ((map->w - 1) * BLOCK_SIZE) - speed)
     {
         try_x = speed;
         direction = RIGHT;
@@ -97,7 +97,7 @@ int try_y = 0;
     if (map->obstacle.tile[(x + try_x)     / BLOCK_SIZE][(y + try_y)     / BLOCK_SIZE].type == 0 &&
         map->obstacle.tile[(x + try_x + w) / BLOCK_SIZE][(y + try_y)     / BLOCK_SIZE].type == 0 &&
         map->obstacle.tile[(x + try_x)     / BLOCK_SIZE][(y + try_y + h) / BLOCK_SIZE].type == 0 &&
-        map->obstacle.tile[(x + try_x + w) / BLOCK_SIZE][(y + try_y + h) / BLOCK_SIZE].type == 0 )
+        map->obstacle.tile[(x + try_x + w) / BLOCK_SIZE][(y + try_y + h) / BLOCK_SIZE].type == 0)
     {
         x += try_x;
         y += try_y;

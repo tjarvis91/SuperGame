@@ -48,6 +48,8 @@ struct Map
     MapLayer low;
     MapLayer high;
     MapLayer obstacle;
+    int w;
+    int h;
 };
 
 #endif

@@ -54,10 +54,18 @@ ifstream map_file(file);
     if(!map_file.is_open())
         error("map_file.open() failed in Game.ParseMap()");
 
-    for(int i = 0; i < MAP_BLOCK_H; i++)
+    getline(map_file, line);
+    map.w = stoi(line);
+    getline(map_file, line);
+    map.h = stoi(line);
+
+    //Empty space
+    getline(map_file, line);
+
+    for(int i = 0; i < map.h; i++)
     {
         getline(map_file, line);
-        for(int j = 0; j < MAP_BLOCK_W; j++)
+        for(int j = 0; j < map.w; j++)
         {
             map.ground.tile[j][i].type = line[2*j]-48;
             map.ground.tile[j][i].variant = line[2*j + 1]-48;
@@ -65,10 +73,10 @@ ifstream map_file(file);
     }
     getline(map_file, line);
 
-    for(int i = 0; i < MAP_BLOCK_H; i++)
+    for(int i = 0; i < map.h; i++)
     {
         getline(map_file, line);
-        for(int j = 0; j < MAP_BLOCK_W; j++)
+        for(int j = 0; j < map.w; j++)
         {
             map.low.tile[j][i].type = line[2*j]-48;
             map.low.tile[j][i].variant = line[2*j + 1]-48;
@@ -76,10 +84,10 @@ ifstream map_file(file);
     }
     getline(map_file, line);
 
-    for(int i = 0; i < MAP_BLOCK_H; i++)
+    for(int i = 0; i < map.h; i++)
     {
         getline(map_file, line);
-        for(int j = 0; j < MAP_BLOCK_W; j++)
+        for(int j = 0; j < map.w; j++)
         {
             map.high.tile[j][i].type = line[2*j]-48;
             map.high.tile[j][i].variant = line[2*j + 1]-48;
@@ -87,16 +95,15 @@ ifstream map_file(file);
     }
     getline(map_file, line);
 
-    for(int i = 0; i < MAP_BLOCK_H; i++)
+    for(int i = 0; i < map.h; i++)
     {
         getline(map_file, line);
-        for(int j = 0; j < MAP_BLOCK_W; j++)
+        for(int j = 0; j < map.w; j++)
         {
             map.obstacle.tile[j][i].type = line[2*j]-48;
             map.obstacle.tile[j][i].variant = line[2*j + 1]-48;
         }
     }
-    getline(map_file, line);
 
     map_file.close();
 }
