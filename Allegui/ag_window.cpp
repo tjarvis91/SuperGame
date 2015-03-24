@@ -9,9 +9,8 @@
 
 #include "allegui.h"
 
-AG_Window::AG_Window(char* title_in)
+AG_Window::AG_Window()
 {
-    game = new Game(title_in);
 }
 
 AG_Window::~AG_Window()
@@ -20,16 +19,50 @@ AG_Window::~AG_Window()
 
 int AG_Window::Setup(int w, int h)
 {
-    if(!g.Setup(w, h))
+    if(!al_init())
     {
-        return -1;
+        return error("al_init() failed in AG_Window.Setup()");
+    }
+
+    if(!al_init_image_addon())
+    {
+        return error("al_init_image_addon() failed in AG_Window.Setup()");
+    }
+
+    if(!al_install_keyboard())
+    {
+        return error("al_install_keyboard() failed in AG_Window.Setup()");
     }
 
     if(!al_install_mouse())
     {
-        error("al_install_mouse() failed in main.cpp");
+        error("al_install_mouse() failed in AG_Window.Setup()");
         return -1;
     }
+
+    timer = al_create_timer(1.0 / FRAMES_PER_SECOND);
+    if(!timer)
+    {
+        return error("al_create_timer() failed in AG_Window.Setup()");
+    }
+
+    al_set_new_display_flags(ALLEGRO_RESIZABLE);
+    display = al_create_display(w, h);
+    if(!display)
+    {
+        return error("al_create_display() failed in AG_Window.Setup()");
+    }
+
+    event_queue = al_create_event_queue();
+    if(!event_queue)
+    {
+        return error("al_create_event_queue() failed in AG_Window.Setup()");
+    }
+
+    al_register_event_source(event_queue, al_get_display_event_source(display));
+    al_register_event_source(event_queue, al_get_timer_event_source(timer));
+    al_register_event_source(event_queue, al_get_keyboard_event_source());
+    return true;
 }
 
 #endif

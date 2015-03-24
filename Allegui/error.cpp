@@ -1,11 +1,13 @@
 /*****************************************
-* error.h
+* error.cpp
 *
-* Header file for error.cpp
+* Error function for simple output box
 *****************************************/
 
-#ifndef error_h
-#define error_h
+#ifndef error_cpp
+#define error_cpp
+
+#include <allegro5\allegro_native_dialog.h>
 
 bool error(const char* err_str)
 {

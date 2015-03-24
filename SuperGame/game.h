@@ -12,13 +12,13 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
+#include <allegui.h>
 #include <iostream>
 #include <fstream>
 #include <string>
+
 // Project Headers
-#include "allegui.h"
 #include "consts.h"
-#include "error.h"
 
 using namespace std;
 

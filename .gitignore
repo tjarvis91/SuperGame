@@ -9,4 +9,13 @@ Map Editor.v12.suo
 Map Editor/allegro.log
 Map Editor/Debug/*
 Map Editor.opensdf
-
+Allegui.sdf
+Allegui.v12.suo
+Allegui/allegro.log
+Allegui/Debug/*
+Allegui.opensdf
+Allegui/Release/Allegui.log
+Allegui/Release/Allegui.Build.CppClean.log
+Allegui/Release/Allegui.pdb
+Allegui/Release/Allegui.tlog/*
+Allegui/Release/vc120.pdb

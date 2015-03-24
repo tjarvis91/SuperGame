@@ -15,18 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\SuperGame\bitmaps.h">
+    <ClInclude Include="allegui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\SuperGame\consts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\SuperGame\game.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="error.cpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="ag_widget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ag_window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
