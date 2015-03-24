@@ -16,18 +16,16 @@
 #include <fstream>
 #include <string>
 // Project Headers
+#include "allegui.h"
 #include "consts.h"
 #include "error.h"
 
 using namespace std;
 
 /* Classes */
-class Game
+class Game : public AG_Window
 {
 public:
-    ALLEGRO_DISPLAY     *display;
-    ALLEGRO_EVENT_QUEUE *event_queue;
-    ALLEGRO_TIMER       *timer;
     Map map;
     char *title;
     Game(char *);
@@ -39,9 +37,6 @@ public:
 
 Game::Game(char *title_in)
 {
-    timer = NULL;
-    display = NULL;
-    event_queue = NULL;
     title = title_in;
     memset(&map, 0, sizeof(map));
 }
@@ -114,8 +109,8 @@ float screen_w, screen_h, sx, sy;
 ALLEGRO_TRANSFORM trans;
 
 
-    screen_w = al_get_display_width(display);
-    screen_h = al_get_display_height(display);
+    screen_w = al_get_display_width(GetDisplay());
+    screen_h = al_get_display_height(GetDisplay());
 
     sx = screen_w / (float)SCREEN_W;
     sy = screen_h / (float)SCREEN_H;
@@ -127,45 +122,13 @@ ALLEGRO_TRANSFORM trans;
 
 int Game::Setup(int w, int h)
 {
-    if(!al_init())
+boolean ret = false;
+
+    if(!AG_Window::Setup(w, h))
     {
-        return error("al_init() failed in Game.Setup()");
+        error("AG_Window::Setup() failed in Game.Setup()");
     }
-
-    if(!al_init_image_addon())
-    {
-        return error("al_init_image_addon() failed in Game.Setup()");
-    }
-
-    if(!al_install_keyboard())
-    {
-        return error("al_install_keyboard() failed in Game.Setup()");
-    }
-
-    timer = al_create_timer(1.0 / FRAMES_PER_SECOND);
-    if(!timer)
-    {
-        return error("al_create_timer() failed in Game.Setup()");
-    }
-
-    al_set_new_display_flags(ALLEGRO_RESIZABLE);
-    display = al_create_display(w, h);
-    if(!display)
-    {
-        return error("al_create_display() failed in Game.Setup()");
-    }
-
-    event_queue = al_create_event_queue();
-    if(!event_queue)
-    {
-        return error("al_create_event_queue() failed in Game.Setup()");
-    }
-
-    al_set_window_title(display, title);
-
-    al_register_event_source(event_queue, al_get_display_event_source(display));
-    al_register_event_source(event_queue, al_get_timer_event_source(timer));
-    al_register_event_source(event_queue, al_get_keyboard_event_source());
+    al_set_window_title(GetDisplay(), title);
     return true;
 }
 
