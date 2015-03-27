@@ -12,6 +12,14 @@
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_native_dialog.h>
+
+inline bool error(char* err_str)
+{
+    ALLEGRO_DISPLAY *display = NULL;
+    al_show_native_message_box(display, "Error", "Error", err_str, NULL, ALLEGRO_MESSAGEBOX_ERROR);
+    return false;
+}
 
 class AG_Widget
 {
@@ -34,10 +42,8 @@ class AG_Window : public AG_Widget
 public:
     AG_Window();
     ~AG_Window();
-    int Setup(int, int);
+    boolean Setup(int, int);
 
 };
-
-bool error(const char*);
 
 #endif

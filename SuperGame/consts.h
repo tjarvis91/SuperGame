@@ -10,7 +10,6 @@
 
 /* Constants */
 #define BLOCK_SIZE                  32
-#define FRAMES_PER_SECOND           60
 #define SCREEN_H                    480
 #define SCREEN_W                    640
 #define STANDARD_CHARACTER_SPEED    4.0

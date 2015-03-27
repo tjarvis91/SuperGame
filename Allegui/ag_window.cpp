@@ -17,7 +17,7 @@ AG_Window::~AG_Window()
 {
 }
 
-int AG_Window::Setup(int w, int h)
+boolean AG_Window::Setup(int w, int h)
 {
     if(!al_init())
     {
@@ -36,8 +36,7 @@ int AG_Window::Setup(int w, int h)
 
     if(!al_install_mouse())
     {
-        error("al_install_mouse() failed in AG_Window.Setup()");
-        return -1;
+        return error("al_install_mouse() failed in AG_Window.Setup()");
     }
 
     timer = al_create_timer(1.0 / FRAMES_PER_SECOND);
