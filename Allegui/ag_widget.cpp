@@ -19,6 +19,8 @@ AG_Widget::AG_Widget(AG_Widget *parent_in)
 {
     parent = parent_in;
     visible = parent_in->visible;
+    x = parent_in->x;
+    y = parent_in->y;
     w = parent_in->w;
     h = parent_in->h;
     display = parent_in->display;
@@ -34,6 +36,26 @@ ALLEGRO_DISPLAY * AG_Widget::GetDisplay()
 ALLEGRO_EVENT_QUEUE * AG_Widget::GetEventQueue()
 {
     return event_queue;
+}
+
+int AG_Widget::GetWidth()
+{
+    return w;
+}
+
+int AG_Widget::GetHeight()
+{
+    return h;
+}
+
+int AG_Widget::GetX()
+{
+    return x;
+}
+
+int AG_Widget::GetY()
+{
+    return y;
 }
 
 ALLEGRO_TIMER * AG_Widget::GetTimer()

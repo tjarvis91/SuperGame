@@ -90,6 +90,9 @@
     <ClInclude Include="allegui.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ag_alignable.cpp" />
+    <ClCompile Include="ag_container.cpp" />
+    <ClCompile Include="ag_scaledcontainer.cpp" />
     <ClCompile Include="ag_widget.cpp" />
     <ClCompile Include="ag_window.cpp" />
   </ItemGroup>

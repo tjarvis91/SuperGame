@@ -26,5 +26,14 @@
     <ClCompile Include="ag_window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ag_container.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ag_scaledcontainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ag_alignable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
