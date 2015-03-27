@@ -36,4 +36,9 @@ ALLEGRO_EVENT_QUEUE * AG_Widget::GetEventQueue()
     return event_queue;
 }
 
+ALLEGRO_TIMER * AG_Widget::GetTimer()
+{
+    return timer;
+}
+
 #endif

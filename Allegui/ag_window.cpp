@@ -15,6 +15,9 @@ AG_Window::AG_Window()
 
 AG_Window::~AG_Window()
 {
+    al_destroy_timer(timer);
+    al_destroy_display(display);
+    al_destroy_event_queue(event_queue);
 }
 
 boolean AG_Window::Setup(int w, int h)

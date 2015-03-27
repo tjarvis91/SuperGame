@@ -41,14 +41,14 @@ int main(int argc, char **argv)
     magic_char.SetBitmap(MAGIC_CHAR_PNG);
 
    al_convert_mask_to_alpha(obstacle[0], al_map_rgb(255, 0, 255));
-   al_set_target_bitmap(al_get_backbuffer(g.display));
+   al_set_target_bitmap(al_get_backbuffer(g.GetDisplay()));
    al_flip_display();
-   al_start_timer(g.timer);
+   al_start_timer(g.GetTimer());
 
     while(!exit)
     {
         ALLEGRO_EVENT ev;
-        al_wait_for_event(g.event_queue, &ev);
+        al_wait_for_event(g.GetEventQueue(), &ev);
 
         if(ev.type == ALLEGRO_EVENT_TIMER)
         {
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
             }
         }
 
-        if(redraw && al_is_event_queue_empty(g.event_queue))
+        if(redraw && al_is_event_queue_empty(g.GetEventQueue()))
         {
             redraw = false;
 
@@ -227,9 +227,6 @@ int main(int argc, char **argv)
     al_destroy_bitmap(terrain[1]);
     al_destroy_bitmap(terrain[2]);
     al_destroy_bitmap(obstacle[0]);
-    al_destroy_timer(g.timer);
-    al_destroy_display(g.display);
-    al_destroy_event_queue(g.event_queue);
 
     return 0;
 }

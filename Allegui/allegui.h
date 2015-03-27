@@ -28,6 +28,7 @@ public:
     AG_Widget(AG_Widget *);
     ALLEGRO_DISPLAY * GetDisplay();
     ALLEGRO_EVENT_QUEUE * GetEventQueue();
+    ALLEGRO_TIMER * GetTimer();
 protected:
     AG_Widget *parent;
     ALLEGRO_DISPLAY * display;
