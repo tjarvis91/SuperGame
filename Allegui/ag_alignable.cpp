@@ -59,7 +59,7 @@ void AG_Alignable::AlignObject(Alignment align_in)
             break;
 
         case BOTTOM_RIGHT:
-            x = parent->GetWidth() -  w - padding;
+            x = parent->GetWidth() - w - padding;
             y = parent->GetHeight() - h - padding;
             break;
     }

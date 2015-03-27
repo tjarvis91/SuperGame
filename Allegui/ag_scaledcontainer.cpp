@@ -15,9 +15,10 @@ AG_ScaledContainer::AG_ScaledContainer(AG_Widget *parent_in, float w_scale_in = 
     w_scale = w_scale_in;
     h_scale = h_scale_in;
     padding = padding_in;
-    w = parent->GetWidth() * w_scale_in;
-    h = parent->GetHeight() * h_scale_in;
+    w = (parent->GetWidth() * w_scale_in) - (padding * 2);
+    h = (parent->GetHeight() * h_scale_in) - (padding * 2);
     AlignObject(align_in);
+
 }
 
 #endif

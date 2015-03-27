@@ -129,6 +129,7 @@ boolean ret = false;
         error("AG_Window::Setup() failed in Game.Setup()");
     }
     al_set_window_title(GetDisplay(), title);
+    al_register_event_source(event_queue, al_get_mouse_event_source());
     return true;
 }
 

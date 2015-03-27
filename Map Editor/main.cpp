@@ -23,10 +23,12 @@ int main(int argc, char **argv)
     {
         return -1;
     }
-
-    AG_ScaledContainer *cont = new AG_ScaledContainer((AG_Widget*)(&g), 0.25, 1, 3, TOP_LEFT);
+    AG_ScaledContainer *cont = new AG_ScaledContainer((AG_Widget*)(&g), 0.33, 0.33, 3, TOP_LEFT);
+    AG_ScaledContainer *cont2 = new AG_ScaledContainer((AG_Widget*)(&g), 0.33, 0.33, 3, MIDDLE_LEFT);
     cont->SetBackgroundColor(al_map_rgb(0, 0, 255));
+    cont2->SetBackgroundColor(al_map_rgb(0, 255, 255));
     cont->Draw();
+    cont2->Draw();
 
     while(true)
     {
@@ -45,7 +47,6 @@ int main(int argc, char **argv)
         {
             break;
         }
-
     }
 
     return 0;
