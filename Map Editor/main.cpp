@@ -24,6 +24,10 @@ int main(int argc, char **argv)
         return -1;
     }
 
+    AG_ScaledContainer *cont = new AG_ScaledContainer((AG_Widget*)(&g), 0.25, 1, 3, TOP_LEFT);
+    cont->SetBackgroundColor(al_map_rgb(0, 0, 255));
+    cont->Draw();
+
     while(true)
     {
         ALLEGRO_EVENT ev;

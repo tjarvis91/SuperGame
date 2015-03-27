@@ -9,6 +9,9 @@
 
 #include "allegui.h"
 
+AG_Alignable::AG_Alignable(AG_Widget * parent_in) : AG_Widget(parent_in)
+{}
+
 void AG_Alignable::AlignObject(Alignment align_in)
 {
     alignment = align_in;

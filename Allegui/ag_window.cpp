@@ -9,8 +9,10 @@
 
 #include "allegui.h"
 
-AG_Window::AG_Window()
+AG_Window::AG_Window() : AG_Widget()
 {
+    w = 0;
+    h = 0;
 }
 
 AG_Window::~AG_Window()
@@ -20,7 +22,7 @@ AG_Window::~AG_Window()
     al_destroy_event_queue(event_queue);
 }
 
-boolean AG_Window::Setup(int w, int h)
+boolean AG_Window::Setup(int w_in, int h_in)
 {
     if(!al_init())
     {
@@ -49,6 +51,8 @@ boolean AG_Window::Setup(int w, int h)
     }
 
     al_set_new_display_flags(ALLEGRO_RESIZABLE);
+    w = w_in;
+    h = h_in;
     display = al_create_display(w, h);
     if(!display)
     {

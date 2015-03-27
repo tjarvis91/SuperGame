@@ -9,10 +9,10 @@
 
 #include "allegui.h"
 
-AG_Container::AG_Container()
+AG_Container::AG_Container(AG_Widget * parent_in) : AG_Alignable(parent_in)
 {}
 
-AG_Container::AG_Container(AG_Widget * parent_in, int x_in = 0, int y_in = 0, int w_in = -1, int h_in = -1, int padding_in = 0, Alignment align_in = TOP_LEFT)
+AG_Container::AG_Container(AG_Widget * parent_in, int x_in, int y_in, int w_in = -1, int h_in = -1, int padding_in = 0, Alignment align_in = TOP_LEFT) : AG_Alignable(parent_in)
 {
     parent = parent_in;
     x = x_in;
@@ -34,6 +34,17 @@ AG_Container::AG_Container(AG_Widget * parent_in, int x_in = 0, int y_in = 0, in
 void AG_Container::SetBackgroundColor(ALLEGRO_COLOR color)
 {
     background = color;
+}
+
+void AG_Container::Draw()
+{
+    ALLEGRO_BITMAP *bkgd = al_create_bitmap(w, h);
+    al_set_target_bitmap(bkgd);
+    al_clear_to_color(al_map_rgb(0, 255, 255));
+    al_set_target_bitmap(al_get_backbuffer(GetDisplay()));
+    al_draw_bitmap(bkgd, 0, 0, 0);
+    al_flip_display();
+    al_destroy_bitmap(bkgd);
 }
 
 #endif

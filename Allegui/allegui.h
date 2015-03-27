@@ -101,6 +101,8 @@ public:
 
 class AG_Alignable : public AG_Widget
 {
+protected:
+    AG_Alignable(AG_Widget *);
 public:
     Alignment alignment;
     int padding;
@@ -111,20 +113,22 @@ class AG_Container : public AG_Alignable
 {
 protected:
     ALLEGRO_COLOR background;
-    AG_Container();
+    AG_Container(AG_Widget *);
 public:
     AG_Container(AG_Widget *, int, int, int, int, int, Alignment);
     void SetBackgroundColor(ALLEGRO_COLOR);
+    void Draw();
+
 };
 
 class AG_ScaledContainer : public AG_Container
 {
 protected:
     float w_scale, h_scale;
+    ALLEGRO_COLOR background;
 
 public:
     AG_ScaledContainer(AG_Widget *, float, float, int, Alignment);
 };
-
 
 #endif
