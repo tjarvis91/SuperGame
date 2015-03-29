@@ -50,12 +50,28 @@ int AG_Widget::GetHeight()
 
 int AG_Widget::GetX()
 {
-    return x;
+	if (parent)
+		return x + parent->GetX();
+	else
+		return x;
 }
 
 int AG_Widget::GetY()
 {
-    return y;
+	if (parent)
+		return y + parent->GetY();
+	else
+		return y;
+}
+
+int AG_Widget::GetLocalX()
+{
+	return x;
+}
+
+int AG_Widget::GetLocalY()
+{
+	return y;
 }
 
 ALLEGRO_TIMER * AG_Widget::GetTimer()

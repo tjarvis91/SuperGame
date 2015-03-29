@@ -4,8 +4,8 @@
 * Main run function for Map Editor
 *****************************************/
 
-#define MAP_EDITOR_W    1280
-#define MAP_EDITOR_H    800
+#define MAP_EDITOR_W    640
+#define MAP_EDITOR_H    480
 
 /* Includes */
 // Libraries
@@ -23,12 +23,25 @@ int main(int argc, char **argv)
     {
         return -1;
     }
-    AG_ScaledContainer *cont = new AG_ScaledContainer((AG_Widget*)(&g), 0.33, 0.33, 3, TOP_LEFT);
-    AG_ScaledContainer *cont2 = new AG_ScaledContainer((AG_Widget*)(&g), 0.33, 0.33, 3, MIDDLE_LEFT);
-    cont->SetBackgroundColor(al_map_rgb(0, 0, 255));
-    cont2->SetBackgroundColor(al_map_rgb(0, 255, 255));
-    cont->Draw();
-    cont2->Draw();
+	AG_Container *menuContainer = new AG_Container((AG_Widget *)(&g), 0, 0, g.GetWidth(), 20, 0, TOP_LEFT);
+	AG_Container *workAreaContainer = new AG_Container((AG_Widget *)(&g), 0, menuContainer->GetHeight(), g.GetWidth(), g.GetHeight()-menuContainer->GetHeight(), 0, BOTTOM_LEFT);
+    AG_ScaledContainer *leftContainer = new AG_ScaledContainer((AG_Widget*)workAreaContainer, 0.15, 1.0, 0, TOP_LEFT);
+    AG_ScaledContainer *rightContainer = new AG_ScaledContainer((AG_Widget*)workAreaContainer, 0.15, 1.0, 0, TOP_RIGHT);
+	AG_ScaledContainer *topTabsContainer = new AG_ScaledContainer((AG_Widget*)workAreaContainer, 0.7, 0.05, 0, TOP_CENTER);
+	AG_ScaledContainer *layerContainer = new AG_ScaledContainer((AG_Widget *)workAreaContainer, 0.7, 0.05, 0, BOTTOM_CENTER);
+	menuContainer->SetBackgroundColor(al_map_rgb(110, 110, 110));
+	workAreaContainer->SetBackgroundColor(al_map_rgb(255, 255, 255));
+    leftContainer->SetBackgroundColor(al_map_rgb(0, 0, 255));
+    rightContainer->SetBackgroundColor(al_map_rgb(0, 255, 255));
+	topTabsContainer->SetBackgroundColor(al_map_rgb(255, 255, 0));
+	layerContainer->SetBackgroundColor(al_map_rgb(255, 0, 0));
+	menuContainer->Draw();
+	workAreaContainer->Draw();
+	leftContainer->Draw();
+	rightContainer->Draw();
+	topTabsContainer->Draw();
+	layerContainer->Draw();
+
 
     while(true)
     {

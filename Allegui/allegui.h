@@ -64,7 +64,7 @@ protected:
     }
 
 public:
-    AG_Widget(AG_Widget *);
+    AG_Widget(AG_Widget *parent);
     ALLEGRO_DISPLAY * GetDisplay();
     ALLEGRO_EVENT_QUEUE * GetEventQueue();
     ALLEGRO_TIMER * GetTimer();
@@ -72,6 +72,8 @@ public:
     int GetHeight();
     int GetX();
     int GetY();
+	int GetLocalX();
+	int GetLocalY();
     virtual void AddListener(AG_Listener *l)
     {
         listeners.insert(l);
@@ -95,28 +97,28 @@ class AG_Window : public AG_Widget
 public:
     AG_Window();
     ~AG_Window();
-    boolean Setup(int, int);
+    boolean Setup(int w, int h);
 
 };
 
 class AG_Alignable : public AG_Widget
 {
 protected:
-    AG_Alignable(AG_Widget *);
+    AG_Alignable(AG_Widget *parent);
 public:
     Alignment alignment;
     int padding;
-    void AlignObject(Alignment);
+    void AlignObject(Alignment alignment);
 };
 
 class AG_Container : public AG_Alignable
 {
 protected:
     ALLEGRO_COLOR background;
-    AG_Container(AG_Widget *);
+    AG_Container(AG_Widget *parent);
 public:
-    AG_Container(AG_Widget *, int, int, int, int, int, Alignment);
-    void SetBackgroundColor(ALLEGRO_COLOR);
+    AG_Container(AG_Widget *parent, int x, int y, int w, int h, int padding, Alignment alignment);
+    void SetBackgroundColor(ALLEGRO_COLOR color);
     void Draw();
 
 };
@@ -128,7 +130,7 @@ protected:
     ALLEGRO_COLOR background;
 
 public:
-    AG_ScaledContainer(AG_Widget *, float, float, int, Alignment);
+    AG_ScaledContainer(AG_Widget *parent, float w_scale, float h_scale, int padding, Alignment alignment);
 };
 
 #endif
