@@ -92,6 +92,8 @@
   <ItemGroup>
     <ClCompile Include="ag_alignable.cpp" />
     <ClCompile Include="ag_container.cpp" />
+    <ClCompile Include="ag_menubar.cpp" />
+    <ClCompile Include="ag_menubutton.cpp" />
     <ClCompile Include="ag_scaledcontainer.cpp" />
     <ClCompile Include="ag_widget.cpp" />
     <ClCompile Include="ag_window.cpp" />

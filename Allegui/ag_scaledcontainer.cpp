@@ -11,7 +11,6 @@
 
 AG_ScaledContainer::AG_ScaledContainer(AG_Widget *parent_in, float w_scale_in = 1.0, float h_scale_in = 1.0, int padding_in = 0, Alignment align_in = TOP_LEFT) : AG_Container(parent_in)
 {
-    parent = parent_in;
     w_scale = w_scale_in;
     h_scale = h_scale_in;
     padding = padding_in;

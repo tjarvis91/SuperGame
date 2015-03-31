@@ -14,7 +14,6 @@ AG_Container::AG_Container(AG_Widget * parent_in) : AG_Alignable(parent_in)
 
 AG_Container::AG_Container(AG_Widget * parent_in, int x_in, int y_in, int w_in = -1, int h_in = -1, int padding_in = 0, Alignment align_in = TOP_LEFT) : AG_Alignable(parent_in)
 {
-    parent = parent_in;
     x = x_in;
     y = y_in;
     w = w_in;

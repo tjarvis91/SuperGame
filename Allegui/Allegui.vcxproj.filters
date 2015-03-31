@@ -35,5 +35,11 @@
     <ClCompile Include="ag_alignable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ag_menubar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ag_menubutton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
