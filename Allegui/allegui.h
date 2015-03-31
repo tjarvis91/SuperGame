@@ -49,68 +49,11 @@ class AG_Widget;
 class AG_Window;
 
 /* Class Definitions */
-//AG_Alignable
-class AG_Alignable : public AG_Widget
-{
-    protected:
-        AG_Alignable(AG_Widget *parent);
-    public:
-        Alignment alignment;
-        int padding;
-        void AlignObject(Alignment alignment);
-};
-
-//AG_Container
-class AG_Container : public AG_Alignable
-{
-    protected:
-        ALLEGRO_COLOR background;
-        AG_Container(AG_Widget *parent);
-    public:
-        AG_Container(AG_Widget *parent, int x, int y, int w, int h, int padding, Alignment alignment);
-        void SetBackgroundColor(ALLEGRO_COLOR color);
-        virtual void Draw();
-};
-
 //AG_Listener
 class AG_Listener
 {
     public:
-           virtual void HandleNotify() = 0;
-};
-
-//AG_MenuBar
-class AG_MenuBar : public AG_Container
-{
-    protected:
-        std::set<AG_MenuButton*> buttons;
-    public:
-        AG_MenuBar(AG_Window *parent);
-        void AddMenuButton(AG_MenuButton *button);
-        void RemoveMenuButton(AG_MenuButton *button);
-        void Draw();
-};
-
-//AG_MenuButton
-class AG_MenuButton : AG_ScaledContainer
-{
-    friend class AG_MenuBar;
-    protected:
-        void Draw();
-        AG_Label *label;
-    public:
-        AG_MenuButton(AG_MenuBar *parent, char *button_name);
-};
-
-//AG_ScaledContainer
-class AG_ScaledContainer : public AG_Container
-{
-    protected:
-        float w_scale, h_scale;
-        ALLEGRO_COLOR background;
-
-    public:
-        AG_ScaledContainer(AG_Widget *parent, float w_scale, float h_scale, int padding, Alignment alignment);
+        virtual void HandleNotify() = 0;
 };
 
 //AG_Widget
@@ -171,5 +114,61 @@ class AG_Window : public AG_Widget
 
 };
 
+//AG_Alignable
+class AG_Alignable : public AG_Widget
+{
+    protected:
+        AG_Alignable(AG_Widget *parent);
+    public:
+        Alignment alignment;
+        int padding;
+        void AlignObject(Alignment alignment);
+};
+
+//AG_Container
+class AG_Container : public AG_Alignable
+{
+    protected:
+        ALLEGRO_COLOR background;
+        AG_Container(AG_Widget *parent);
+    public:
+        AG_Container(AG_Widget *parent, int x, int y, int w, int h, int padding, Alignment alignment);
+        void SetBackgroundColor(ALLEGRO_COLOR color);
+        virtual void Draw();
+};
+
+//AG_ScaledContainer
+class AG_ScaledContainer : public AG_Container
+{
+    protected:
+        float w_scale, h_scale;
+        ALLEGRO_COLOR background;
+
+    public:
+        AG_ScaledContainer(AG_Widget *parent, float w_scale, float h_scale, int padding, Alignment alignment);
+};
+
+//AG_MenuBar
+class AG_MenuBar : public AG_Container
+{
+    protected:
+        std::set<AG_MenuButton*> buttons;
+    public:
+        AG_MenuBar(AG_Window *parent);
+        void AddMenuButton(AG_MenuButton *button);
+        void RemoveMenuButton(AG_MenuButton *button);
+        void Draw();
+};
+
+//AG_MenuButton
+class AG_MenuButton : AG_ScaledContainer
+{
+    friend class AG_MenuBar;
+    protected:
+        void Draw();
+        AG_Label *label;
+    public:
+        AG_MenuButton(AG_MenuBar *parent, char *button_name);
+};
 
 #endif
