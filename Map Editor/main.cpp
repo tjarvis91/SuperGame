@@ -23,24 +23,28 @@ int main(int argc, char **argv)
     {
         return -1;
     }
-	AG_Container *menuContainer = new AG_Container((AG_Widget *)(&g), 0, 0, g.GetWidth(), 20, 0, TOP_LEFT);
-	AG_Container *workAreaContainer = new AG_Container((AG_Widget *)(&g), 0, menuContainer->GetHeight(), g.GetWidth(), g.GetHeight()-menuContainer->GetHeight(), 0, BOTTOM_LEFT);
-    AG_ScaledContainer *leftContainer = new AG_ScaledContainer((AG_Widget*)workAreaContainer, 0.15, 1.0, 0, TOP_LEFT);
-    AG_ScaledContainer *rightContainer = new AG_ScaledContainer((AG_Widget*)workAreaContainer, 0.15, 1.0, 0, TOP_RIGHT);
-	AG_ScaledContainer *topTabsContainer = new AG_ScaledContainer((AG_Widget*)workAreaContainer, 0.7, 0.05, 0, TOP_CENTER);
-	AG_ScaledContainer *layerContainer = new AG_ScaledContainer((AG_Widget *)workAreaContainer, 0.7, 0.05, 0, BOTTOM_CENTER);
-	menuContainer->SetBackgroundColor(al_map_rgb(110, 110, 110));
-	workAreaContainer->SetBackgroundColor(al_map_rgb(255, 255, 255));
-    leftContainer->SetBackgroundColor(al_map_rgb(0, 0, 255));
-    rightContainer->SetBackgroundColor(al_map_rgb(0, 255, 255));
-	topTabsContainer->SetBackgroundColor(al_map_rgb(255, 255, 0));
-	layerContainer->SetBackgroundColor(al_map_rgb(255, 0, 0));
-	menuContainer->Draw();
-	workAreaContainer->Draw();
-	leftContainer->Draw();
-	rightContainer->Draw();
-	topTabsContainer->Draw();
-	layerContainer->Draw();
+    AG_MenuBar *menu = new AG_MenuBar((AG_Window *)(&g));
+    AG_MenuButton *file = new AG_MenuButton(menu, "File");
+    AG_MenuButton *edit = new AG_MenuButton(menu, "Edit");
+    ALLEGRO_FONT *font = al_load_font("Fonts/arial.ttf", 18, 0);
+    al_draw_text(font, al_map_rgb(255,255,255),0,0,0,"TEST");
+    AG_Container *workArea = new AG_Container((AG_Widget *)(&g), 0, menu->GetHeight(), g.GetWidth(), g.GetHeight()-menu->GetHeight(), 0, BOTTOM_LEFT);
+    AG_ScaledContainer *toolbox = new AG_ScaledContainer((AG_Widget*)workArea, 0.15, 1.0, 0, TOP_LEFT);
+    AG_ScaledContainer *mapExplorer = new AG_ScaledContainer((AG_Widget*)workArea, 0.15, 1.0, 0, TOP_RIGHT);
+    AG_ScaledContainer *mapTabs = new AG_ScaledContainer((AG_Widget*)workArea, 0.7, 0.05, 0, TOP_CENTER);
+    AG_ScaledContainer *layerTabs = new AG_ScaledContainer((AG_Widget *)workArea, 0.7, 0.05, 0, BOTTOM_CENTER);
+    menu->SetBackgroundColor(al_map_rgb(220, 220, 220));
+    workArea->SetBackgroundColor(al_map_rgb(255, 255, 255));
+    toolbox->SetBackgroundColor(al_map_rgb(0, 0, 255));
+    mapExplorer->SetBackgroundColor(al_map_rgb(0, 255, 255));
+    mapTabs->SetBackgroundColor(al_map_rgb(255, 255, 0));
+    layerTabs->SetBackgroundColor(al_map_rgb(255, 0, 0));
+    menu->Draw();
+    workArea->Draw();
+    toolbox->Draw();
+    mapExplorer->Draw();
+    mapTabs->Draw();
+    layerTabs->Draw();
 
 
     while(true)

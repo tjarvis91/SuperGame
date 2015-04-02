@@ -11,7 +11,7 @@
 
 #define MENUBAR_W_SCALE     0.1
 
-AG_MenuButton::AG_MenuButton(AG_MenuBar *parent_in, char *button_name_in) :  AG_ScaledContainer((AG_Widget *)parent_in, MENUBAR_W_SCALE, 1.0, 3, MIDDLE_CENTER)
+AG_MenuButton::AG_MenuButton(AG_MenuBar *parent_in, char *button_name_in) :  AG_ScaledContainer((AG_Widget *)parent_in, MENUBAR_W_SCALE, 1.0, 2, MIDDLE_LEFT)
 {
     label = new AG_Label(this, button_name_in);
     parent_in->AddMenuButton(this);
@@ -20,7 +20,7 @@ AG_MenuButton::AG_MenuButton(AG_MenuBar *parent_in, char *button_name_in) :  AG_
 void AG_MenuButton::Draw()
 {
     AG_ScaledContainer::Draw();
-    AG_Label::Draw();
+    label->AG_Label::Draw();
 }
 
 #endif

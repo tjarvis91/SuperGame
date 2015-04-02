@@ -13,6 +13,8 @@ AG_Window::AG_Window() : AG_Widget()
 {
     w = 0;
     h = 0;
+    x = 0;
+    y = 0;
 }
 
 AG_Window::~AG_Window()
@@ -64,6 +66,9 @@ boolean AG_Window::Setup(int w_in, int h_in)
     {
         return error("al_create_event_queue() failed in AG_Window.Setup()");
     }
+
+    al_init_font_addon();
+    al_init_ttf_addon();
 
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));

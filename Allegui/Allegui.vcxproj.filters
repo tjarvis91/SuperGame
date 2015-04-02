@@ -41,5 +41,8 @@
     <ClCompile Include="ag_menubutton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ag_label.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

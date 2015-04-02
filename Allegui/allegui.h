@@ -8,12 +8,16 @@
 #define allegui_h
 
 #define ALLEGRO_NO_MAGIC_MAIN
+#define AG_MAX_BUTTONS      12
 #define FRAMES_PER_SECOND   60
 
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
 #include <set>
+#include <vector>
 #include <algorithm>
 
 enum Alignment
@@ -137,27 +141,26 @@ class AG_Container : public AG_Alignable
         virtual void Draw();
 };
 
+//AG_Label
+class AG_Label : public AG_Alignable
+{
+    protected:
+        char *labelName;
+        ALLEGRO_FONT *font;
+        ALLEGRO_COLOR color;
+    public:
+        AG_Label(AG_Container *parent, char *label_name);
+        void Draw();
+};
+
 //AG_ScaledContainer
 class AG_ScaledContainer : public AG_Container
 {
     protected:
         float w_scale, h_scale;
         ALLEGRO_COLOR background;
-
     public:
         AG_ScaledContainer(AG_Widget *parent, float w_scale, float h_scale, int padding, Alignment alignment);
-};
-
-//AG_MenuBar
-class AG_MenuBar : public AG_Container
-{
-    protected:
-        std::set<AG_MenuButton*> buttons;
-    public:
-        AG_MenuBar(AG_Window *parent);
-        void AddMenuButton(AG_MenuButton *button);
-        void RemoveMenuButton(AG_MenuButton *button);
-        void Draw();
 };
 
 //AG_MenuButton
@@ -169,6 +172,19 @@ class AG_MenuButton : AG_ScaledContainer
         AG_Label *label;
     public:
         AG_MenuButton(AG_MenuBar *parent, char *button_name);
+};
+
+//AG_MenuBar
+class AG_MenuBar : public AG_Container
+{
+    protected:
+        AG_MenuButton *buttons[AG_MAX_BUTTONS];
+        int buttonCount;
+    public:
+        AG_MenuBar(AG_Window *parent);
+        void AddMenuButton(AG_MenuButton *button);
+        void RemoveMenuButton(AG_MenuButton *button);
+        void Draw();
 };
 
 #endif
