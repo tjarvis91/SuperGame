@@ -114,6 +114,7 @@ class AG_Window : public AG_Widget
     public:
         AG_Window();
         ~AG_Window();
+        void Resize();
         boolean Setup(int w, int h);
 
 };
@@ -149,8 +150,9 @@ class AG_Label : public AG_Alignable
         ALLEGRO_FONT *font;
         ALLEGRO_COLOR color;
     public:
-        AG_Label(AG_Container *parent, char *label_name);
+        AG_Label(AG_Container *parent, char *label_name, Alignment align_in=TOP_LEFT);
         void Draw();
+        void SetColor(ALLEGRO_COLOR color);
 };
 
 //AG_ScaledContainer

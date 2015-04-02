@@ -30,7 +30,6 @@ public:
     char *title;
     Game(char *);
     void ParseMap(const char*);
-    void Resize();
     int Setup(int, int);
     void ShutDown(){};
 };
@@ -102,23 +101,6 @@ ifstream map_file(file);
 
     map_file.close();
 }
-
-void Game::Resize()
-{
-float screen_w, screen_h, sx, sy;
-ALLEGRO_TRANSFORM trans;
-
-
-    screen_w = al_get_display_width(GetDisplay());
-    screen_h = al_get_display_height(GetDisplay());
-
-    sx = screen_w / (float)SCREEN_W;
-    sy = screen_h / (float)SCREEN_H;
-
-    al_identity_transform(&trans);
-    al_scale_transform(&trans, sx, sy);
-    al_use_transform(&trans);
-};
 
 int Game::Setup(int w, int h)
 {

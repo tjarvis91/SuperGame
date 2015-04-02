@@ -24,6 +24,24 @@ AG_Window::~AG_Window()
     al_destroy_event_queue(event_queue);
 }
 
+
+void AG_Window::Resize()
+{
+float screen_w, screen_h, sx, sy;
+ALLEGRO_TRANSFORM trans;
+
+
+    screen_w = al_get_display_width(display);
+    screen_h = al_get_display_height(display);
+
+    sx = screen_w / (float)w;
+    sy = screen_h / (float)h;
+
+    al_identity_transform(&trans);
+    al_scale_transform(&trans, sx, sy);
+    al_use_transform(&trans);
+}
+
 boolean AG_Window::Setup(int w_in, int h_in)
 {
     if(!al_init())

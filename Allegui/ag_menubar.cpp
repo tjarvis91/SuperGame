@@ -10,7 +10,7 @@
 #include "allegui.h"
 
 #define MENUBAR_HEIGHT      25;
-#define MENUBAR_COLOR       {220, 220, 220, 255}
+#define MENUBAR_COLOR       {110, 110, 110, 0}
 
 AG_MenuBar::AG_MenuBar(AG_Window *parent_in) : AG_Container((AG_Widget *)parent_in)
 {

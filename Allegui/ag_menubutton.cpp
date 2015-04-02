@@ -13,7 +13,7 @@
 
 AG_MenuButton::AG_MenuButton(AG_MenuBar *parent_in, char *button_name_in) :  AG_ScaledContainer((AG_Widget *)parent_in, MENUBAR_W_SCALE, 1.0, 2, MIDDLE_LEFT)
 {
-    label = new AG_Label(this, button_name_in);
+    label = new AG_Label(this, button_name_in, MIDDLE_CENTER);
     parent_in->AddMenuButton(this);
 }
 
