@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ag_alignable.cpp" />
+    <ClCompile Include="ag_button.cpp" />
     <ClCompile Include="ag_container.cpp" />
     <ClCompile Include="ag_label.cpp" />
     <ClCompile Include="ag_menubar.cpp" />

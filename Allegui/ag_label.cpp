@@ -15,7 +15,6 @@ AG_Label::AG_Label(AG_Container *parent_in, char *label_name_in, Alignment align
     alignment = align_in;
     font = al_load_font("Fonts/arial.ttf", 14, 0);
     color = al_map_rgb(0, 0, 0);
-    alignment = TOP_LEFT;
     w = al_get_text_width(font, label_name_in);
     h = font->height;
     AlignObject(align_in);
@@ -31,6 +30,13 @@ void AG_Label::Draw()
 void AG_Label::SetColor(ALLEGRO_COLOR color_in)
 {
     color = color_in;
+}
+
+
+void AG_Label::HandleNotify()
+{
+    color = al_map_rgb(0, 255,255);
+    Draw();
 }
 
 #endif

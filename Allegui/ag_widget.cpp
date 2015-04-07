@@ -9,74 +9,48 @@
 
 #include "allegui.h"
 
-AG_Widget::AG_Widget()
+AG_Widget::AG_Widget(AG_Window *window_in)
 {
+    window = window_in;
     parent = NULL;
-    visible = true;
+    x = 0;
+    y = 0;
 }
 
 AG_Widget::AG_Widget(AG_Widget *parent_in)
 {
     parent = parent_in;
-    visible = parent_in->visible;
+    window = parent->window;
     x = parent_in->x;
     y = parent_in->y;
     w = parent_in->w;
     h = parent_in->h;
-    display = parent_in->display;
-    event_queue = parent_in->event_queue;
-    timer = parent_in->timer;
-}
-
-ALLEGRO_DISPLAY * AG_Widget::GetDisplay()
-{
-    return display;
-}
-
-ALLEGRO_EVENT_QUEUE * AG_Widget::GetEventQueue()
-{
-    return event_queue;
-}
-
-int AG_Widget::GetWidth()
-{
-    return w;
-}
-
-int AG_Widget::GetHeight()
-{
-    return h;
 }
 
 int AG_Widget::GetX()
 {
-	if (parent)
-		return x + parent->GetX();
-	else
-		return x;
+    if (parent)
+        return x + parent->GetX();
+    else
+        return x;
 }
 
 int AG_Widget::GetY()
 {
-	if (parent)
-		return y + parent->GetY();
-	else
-		return y;
+    if (parent)
+        return y + parent->GetY();
+    else
+        return y;
 }
 
 int AG_Widget::GetLocalX()
 {
-	return x;
+    return x;
 }
 
 int AG_Widget::GetLocalY()
 {
-	return y;
-}
-
-ALLEGRO_TIMER * AG_Widget::GetTimer()
-{
-    return timer;
+    return y;
 }
 
 #endif

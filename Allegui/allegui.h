@@ -53,50 +53,66 @@ class AG_Widget;
 class AG_Window;
 
 /* Class Definitions */
-//AG_Listener
-class AG_Listener
-{
-    public:
-        virtual void HandleNotify() = 0;
-};
-
-//AG_Widget
-class AG_Widget
+//AG_Window
+class AG_Window
 {
     private:
-        std::set<AG_Listener*> listeners;
-
+        ALLEGRO_THREAD *listen;
+        std::set<AG_Widget *> clickables;
     protected:
-        AG_Widget();
-        AG_Widget *parent;
         ALLEGRO_DISPLAY * display;
         ALLEGRO_EVENT_QUEUE * event_queue;
         ALLEGRO_TIMER * timer;
-        bool visible;
-        int x, y, w, h;
-        virtual void Notify()
-        {
-            std::for_each(listeners.begin(), listeners.end(), [&](AG_Listener *l) {l->HandleNotify(); });
-        }
-
+        int w, h;
     public:
-        AG_Widget(AG_Widget *parent);
+        AG_Window();
+        ~AG_Window();
+        void AddClickable(AG_Widget *add);
+        void RemoveClickable(AG_Widget *remove);
         ALLEGRO_DISPLAY * GetDisplay();
         ALLEGRO_EVENT_QUEUE * GetEventQueue();
         ALLEGRO_TIMER * GetTimer();
         int GetWidth();
         int GetHeight();
+        void Press(int x, int y);
+        void Resize();
+        boolean Setup(int w, int h);
+
+};
+
+//AG_Widget
+class AG_Widget : public AG_Window
+{
+    private:
+        std::set<AG_Widget*> listeners;
+
+    protected:
+        AG_Widget();
+        AG_Window *window;
+        AG_Widget *parent;
+        int x, y;
+
+    public:
+        AG_Widget(AG_Window *window);
+        AG_Widget(AG_Widget *parent);
         int GetX();
         int GetY();
         int GetLocalX();
         int GetLocalY();
-        virtual void AddListener(AG_Listener *l)
+        virtual void HandleNotify(){};
+        virtual void Notify()
         {
+            std::for_each(listeners.begin(), listeners.end(), [&](AG_Widget *l) {l->HandleNotify(); });
+        }
+        virtual void AddListener(AG_Widget *l)
+        {
+            window->AddClickable(this);
             listeners.insert(l);
         }
-        virtual void RemoveListener(AG_Listener *l)
+
+        virtual void RemoveListener(AG_Widget *l)
         {
-            std::set<AG_Listener *>::const_iterator iter = listeners.find(l);
+            std::set<AG_Widget *>::const_iterator iter = listeners.find(l);
             if(iter != listeners.end())
             {
                 listeners.erase(iter);
@@ -106,17 +122,6 @@ class AG_Widget
                 error("Could not unregister the specified listener object as it is not registered.");
             }
         }
-};
-
-//AG_Window
-class AG_Window : public AG_Widget
-{
-    public:
-        AG_Window();
-        ~AG_Window();
-        void Resize();
-        boolean Setup(int w, int h);
-
 };
 
 //AG_Alignable
@@ -153,6 +158,7 @@ class AG_Label : public AG_Alignable
         AG_Label(AG_Container *parent, char *label_name, Alignment align_in=TOP_LEFT);
         void Draw();
         void SetColor(ALLEGRO_COLOR color);
+        void HandleNotify();
 };
 
 //AG_ScaledContainer
@@ -165,12 +171,22 @@ class AG_ScaledContainer : public AG_Container
         AG_ScaledContainer(AG_Widget *parent, float w_scale, float h_scale, int padding, Alignment alignment);
 };
 
+//AG_Button
+class AG_Button : public AG_Alignable
+{
+    protected:
+        AG_Label *label;
+        AG_Container *buttonBack;
+    public:
+        AG_Button(AG_Container *parent, char *button_text, float w_scale = 1.0, float h_scale = 1.0, int padding = 0, Alignment align_in=TOP_LEFT);
+        void Draw();
+};
+
 //AG_MenuButton
-class AG_MenuButton : AG_ScaledContainer
+class AG_MenuButton : public AG_Button
 {
     friend class AG_MenuBar;
     protected:
-        void Draw();
         AG_Label *label;
     public:
         AG_MenuButton(AG_MenuBar *parent, char *button_name);
@@ -188,5 +204,6 @@ class AG_MenuBar : public AG_Container
         void RemoveMenuButton(AG_MenuButton *button);
         void Draw();
 };
+
 
 #endif
