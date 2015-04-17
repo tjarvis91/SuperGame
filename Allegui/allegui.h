@@ -45,7 +45,6 @@ inline bool error(char* err_str)
 /* Class Declarations */
 class AG_Alignable;
 class AG_Container;
-class AG_Listener;
 class AG_MenuBar;
 class AG_MenuButton;
 class AG_ScaledContainer;
@@ -53,18 +52,12 @@ class AG_Widget;
 class AG_Window;
 
 /* Class Definitions */
-//AG_Listener
-class AG_Listener
-{
-    public:
-        virtual void HandleNotify() = 0;
-};
 
 //AG_Widget
 class AG_Widget
 {
     private:
-        std::set<AG_Listener*> listeners;
+        std::set<AG_Widget *> listeners;
 
     protected:
         AG_Widget();
@@ -74,13 +67,11 @@ class AG_Widget
         ALLEGRO_TIMER * timer;
         bool visible;
         int x, y, w, h;
-        virtual void Notify()
-        {
-            std::for_each(listeners.begin(), listeners.end(), [&](AG_Listener *l) {l->HandleNotify(); });
-        }
 
     public:
         AG_Widget(AG_Widget *parent);
+        virtual void AddClickable(AG_Widget *add);
+        virtual void RemoveClickable(AG_Widget *remove);
         ALLEGRO_DISPLAY * GetDisplay();
         ALLEGRO_EVENT_QUEUE * GetEventQueue();
         ALLEGRO_TIMER * GetTimer();
@@ -90,13 +81,21 @@ class AG_Widget
         int GetY();
         int GetLocalX();
         int GetLocalY();
-        virtual void AddListener(AG_Listener *l)
+        bool GetVisible();
+        void SetVisible(bool visible_in);
+        virtual void HandleNotify(){};
+        virtual void Notify()
         {
+            std::for_each(listeners.begin(), listeners.end(), [&](AG_Widget *l) {l->HandleNotify(); });
+        }
+        virtual void AddListener(AG_Widget *l)
+        {
+            AddClickable(this);
             listeners.insert(l);
         }
-        virtual void RemoveListener(AG_Listener *l)
+        virtual void RemoveListener(AG_Widget *l)
         {
-            std::set<AG_Listener *>::const_iterator iter = listeners.find(l);
+            std::set<AG_Widget *>::const_iterator iter = listeners.find(l);
             if(iter != listeners.end())
             {
                 listeners.erase(iter);
@@ -111,9 +110,15 @@ class AG_Widget
 //AG_Window
 class AG_Window : public AG_Widget
 {
+    private:
+        ALLEGRO_THREAD *listen;
     public:
         AG_Window();
         ~AG_Window();
+        std::vector<AG_Widget *> clickables;
+        void AddClickable(AG_Widget *add);
+        void RemoveClickable(AG_Widget *remove);
+        void Press(int x, int y);
         void Resize();
         boolean Setup(int w, int h);
 
@@ -137,7 +142,7 @@ class AG_Container : public AG_Alignable
         ALLEGRO_COLOR background;
         AG_Container(AG_Widget *parent);
     public:
-        AG_Container(AG_Widget *parent, int x, int y, int w, int h, int padding, Alignment alignment);
+        AG_Container(AG_Widget *parent, int x, int y, int w, int h, int padding);
         void SetBackgroundColor(ALLEGRO_COLOR color);
         virtual void Draw();
 };
@@ -165,6 +170,18 @@ class AG_ScaledContainer : public AG_Container
         AG_ScaledContainer(AG_Widget *parent, float w_scale, float h_scale, int padding, Alignment alignment);
 };
 
+//AG_Button
+class AG_Button : public AG_Alignable
+{
+    protected:
+        AG_Label *label;
+        AG_Container *buttonBack;
+    public:
+        AG_Button(AG_Container *parent, char *button_text, float w_scale = 1.0, float h_scale = 1.0, int padding = 0, Alignment align_in=TOP_LEFT);
+        void Draw();
+        void Notify();
+};
+
 //AG_MenuButton
 class AG_MenuButton : AG_ScaledContainer
 {
@@ -172,8 +189,10 @@ class AG_MenuButton : AG_ScaledContainer
     protected:
         void Draw();
         AG_Label *label;
+        AG_Container *dropMenu;
     public:
         AG_MenuButton(AG_MenuBar *parent, char *button_name);
+        void Notify();
 };
 
 //AG_MenuBar

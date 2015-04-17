@@ -29,11 +29,12 @@ int main(int argc, char **argv)
     AG_MenuButton *save = new AG_MenuButton(menu, "Save");
     AG_MenuButton *load = new AG_MenuButton(menu, "Load");
 
-    AG_Container *workArea = new AG_Container((AG_Widget *)(&g), 0, menu->GetHeight(), g.GetWidth(), g.GetHeight()-menu->GetHeight(), 0, BOTTOM_LEFT);
+    AG_Container *workArea = new AG_Container((AG_Widget *)(&g), 0, menu->GetHeight(), g.GetWidth(), g.GetHeight()-menu->GetHeight(), 0);
 
     AG_ScaledContainer *toolbox = new AG_ScaledContainer((AG_Widget*)workArea, 0.15, 1.0, 0, TOP_LEFT);
     AG_ScaledContainer *tileChooser = new AG_ScaledContainer((AG_Widget*)toolbox, 1.0, 0.5, 5, TOP_CENTER);
     AG_Label *tileChooserLabel = new AG_Label(tileChooser, "Tile Chooser", TOP_CENTER);
+    AG_Button *tile1 = new AG_Button(tileChooser, "Click me!", 1, 0.15, 0, MIDDLE_CENTER);
     AG_ScaledContainer *mapExplorer = new AG_ScaledContainer((AG_Widget*)workArea, 0.15, 1.0, 0, TOP_RIGHT);
     AG_ScaledContainer *mapTabs = new AG_ScaledContainer((AG_Widget*)workArea, 0.7, 0.05, 0, TOP_CENTER);
     AG_ScaledContainer *layerTabs = new AG_ScaledContainer((AG_Widget *)workArea, 0.7, 0.05, 0, BOTTOM_CENTER);
@@ -44,14 +45,17 @@ int main(int argc, char **argv)
     mapExplorer->SetBackgroundColor(al_map_rgb(0, 255, 255));
     mapTabs->SetBackgroundColor(al_map_rgb(255, 255, 0));
     layerTabs->SetBackgroundColor(al_map_rgb(255, 0, 0));
-    menu->Draw();
     workArea->Draw();
     toolbox->Draw();
     tileChooser->Draw();
     tileChooserLabel->Draw();
+    tile1->Draw();
     mapExplorer->Draw();
     mapTabs->Draw();
     layerTabs->Draw();
+    menu->Draw();
+
+    al_start_timer(g.GetTimer());
 
     while(true)
     {
@@ -65,14 +69,27 @@ int main(int argc, char **argv)
         else if(ev.type == ALLEGRO_EVENT_DISPLAY_RESIZE)
         {
             g.Resize();
-            menu->Draw();
             workArea->Draw();
             toolbox->Draw();
             tileChooser->Draw();
             tileChooserLabel->Draw();
+            tile1->Draw();
             mapExplorer->Draw();
             mapTabs->Draw();
             layerTabs->Draw();
+            menu->Draw();
+        }
+        else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+        {
+            workArea->Draw();
+            toolbox->Draw();
+            tileChooser->Draw();
+            tileChooserLabel->Draw();
+            tile1->Draw();
+            mapExplorer->Draw();
+            mapTabs->Draw();
+            layerTabs->Draw();
+            menu->Draw();
         }
         else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
         {

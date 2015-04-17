@@ -9,12 +9,14 @@
 
 #include "allegui.h"
 
+static void *Listen(ALLEGRO_THREAD *listen, void *arg);
+
 AG_Window::AG_Window() : AG_Widget()
 {
     w = 0;
     h = 0;
-    x = 0;
-    y = 0;
+    listen = NULL;
+    visible = true;
 }
 
 AG_Window::~AG_Window()
@@ -24,6 +26,37 @@ AG_Window::~AG_Window()
     al_destroy_event_queue(event_queue);
 }
 
+void AG_Window::AddClickable(AG_Widget *add)
+{
+std::vector<AG_Widget *>::iterator it = clickables.begin();
+clickables.insert(it, add);
+}
+
+void AG_Window::RemoveClickable(AG_Widget *remove)
+{
+    for(unsigned int i = 0; i < clickables.size(); i++)
+    {
+        if(clickables.at(i) == remove)
+            {
+            clickables.erase(clickables.begin() + i);
+            return;
+            }
+    }
+
+    error("Could not unregister the specified clickable object as it is not registered.");
+}
+
+void AG_Window::Press(int x_press, int y_press)
+{
+    std::for_each(clickables.begin(), clickables.end(), [&](AG_Widget *l)
+    {
+        if(x_press > l->GetX() && x_press < l->GetX() + l->GetWidth()
+        && y_press > l->GetY() && y_press < l->GetY() + l->GetHeight())
+        {
+            l->Notify();
+        }
+    });
+}
 
 void AG_Window::Resize()
 {
@@ -91,7 +124,33 @@ boolean AG_Window::Setup(int w_in, int h_in)
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
+
+    listen = al_create_thread(Listen, this);
+    al_start_thread(listen);
+
     return true;
 }
+
+static void *Listen(ALLEGRO_THREAD *listen, void *arg)
+{
+    AG_Window *window = (AG_Window *)arg;
+    ALLEGRO_EVENT_QUEUE *queue = NULL;
+    ALLEGRO_EVENT ev;
+    if(!window)
+        return NULL;
+
+    queue = window->GetEventQueue();
+
+    while(!al_get_thread_should_stop(listen))
+    {
+        al_peek_next_event(queue, &ev);
+        if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+        {
+            window->Press(ev.mouse.x, ev.mouse.y);
+        }
+    }
+    return NULL;
+}
+
 
 #endif

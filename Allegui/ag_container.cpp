@@ -12,7 +12,7 @@
 AG_Container::AG_Container(AG_Widget * parent_in) : AG_Alignable(parent_in)
 {}
 
-AG_Container::AG_Container(AG_Widget * parent_in, int x_in, int y_in, int w_in = -1, int h_in = -1, int padding_in = 0, Alignment align_in = TOP_LEFT) : AG_Alignable(parent_in)
+AG_Container::AG_Container(AG_Widget * parent_in, int x_in, int y_in, int w_in = -1, int h_in = -1, int padding_in = 0) : AG_Alignable(parent_in)
 {
     x = x_in;
     y = y_in;
@@ -29,6 +29,7 @@ AG_Container::AG_Container(AG_Widget * parent_in, int x_in, int y_in, int w_in =
 
     w = w - (padding * 2);
     h = h - (padding * 2);
+    background = al_map_rgb(0,0,0);
 }
 
 void AG_Container::SetBackgroundColor(ALLEGRO_COLOR color)
@@ -38,14 +39,17 @@ void AG_Container::SetBackgroundColor(ALLEGRO_COLOR color)
 
 void AG_Container::Draw()
 {
-    al_flip_display();
-    ALLEGRO_BITMAP *bkgd = al_create_bitmap(w, h);
-    al_set_target_bitmap(bkgd);
-    al_clear_to_color(background);
-    al_set_target_bitmap(al_get_backbuffer(GetDisplay()));
-    al_draw_bitmap(bkgd, GetX(), GetY(), 0);
-    al_flip_display();
-    al_destroy_bitmap(bkgd);
+    if(visible)
+    {
+        al_flip_display();
+        ALLEGRO_BITMAP *bkgd = al_create_bitmap(w, h);
+        al_set_target_bitmap(bkgd);
+        al_clear_to_color(background);
+        al_set_target_bitmap(al_get_backbuffer(GetDisplay()));
+        al_draw_bitmap(bkgd, GetX(), GetY(), 0);
+        al_flip_display();
+        al_destroy_bitmap(bkgd);
+    }
 }
 
 #endif

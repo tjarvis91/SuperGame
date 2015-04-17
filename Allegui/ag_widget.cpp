@@ -12,7 +12,6 @@
 AG_Widget::AG_Widget()
 {
     parent = NULL;
-    visible = true;
 }
 
 AG_Widget::AG_Widget(AG_Widget *parent_in)
@@ -26,6 +25,16 @@ AG_Widget::AG_Widget(AG_Widget *parent_in)
     display = parent_in->display;
     event_queue = parent_in->event_queue;
     timer = parent_in->timer;
+}
+
+void AG_Widget::AddClickable(AG_Widget *add)
+{
+    parent->AddClickable(add);
+}
+
+void AG_Widget::RemoveClickable(AG_Widget *remove)
+{
+    parent->RemoveClickable(remove);
 }
 
 ALLEGRO_DISPLAY * AG_Widget::GetDisplay()
@@ -77,6 +86,16 @@ int AG_Widget::GetLocalY()
 ALLEGRO_TIMER * AG_Widget::GetTimer()
 {
     return timer;
+}
+
+bool AG_Widget::GetVisible()
+{
+    return visible;
+}
+
+void AG_Widget::SetVisible(bool visible_in)
+{
+    visible = visible_in;
 }
 
 #endif
