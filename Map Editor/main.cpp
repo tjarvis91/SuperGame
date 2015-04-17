@@ -32,13 +32,13 @@ int main(int argc, char **argv)
     AG_Container *workArea = new AG_Container((AG_Widget *)(&g), 0, menu->GetHeight(), g.GetWidth(), g.GetHeight()-menu->GetHeight(), 0, BOTTOM_LEFT);
 
     AG_ScaledContainer *toolbox = new AG_ScaledContainer((AG_Widget*)workArea, 0.15, 1.0, 0, TOP_LEFT);
-    AG_ScaledContainer *tileChooser = new AG_ScaledContainer((AG_Widget*)toolbox, 1.0, 0.5, 5, TOP_CENTER);
+    AG_ScaledContainer *tileChooser = new AG_ScaledContainer((AG_Widget*)toolbox, 1.0, 0.5, 0, TOP_CENTER);
     AG_Label *tileChooserLabel = new AG_Label(tileChooser, "Tile Chooser", TOP_CENTER);
-    AG_Button *tile1 = new AG_Button(tileChooser, "Click me!", 1, 0.15, 5, MIDDLE_CENTER);
+    AG_Button *tile1 = new AG_Button(tileChooser, "Click me!", 1, 0.15, 0, MIDDLE_CENTER);
     tile1->AddListener((AG_Widget *)tileChooserLabel);
 
-    AG_ScaledContainer *tileOptions = new AG_ScaledContainer((AG_Widget*)toolbox, 1.0, 0.5, 5, BOTTOM_CENTER);
-    AG_Label *tileOptionsLabel = new AG_Label(tileOptions, "Tile Options", TOP_CENTER);
+    //AG_ScaledContainer *tileOptions = new AG_ScaledContainer((AG_Widget*)toolbox, 1.0, 0.5, 0, BOTTOM_CENTER);
+    //AG_Label *tileOptionsLabel = new AG_Label(tileOptions, "Tile Options", TOP_CENTER);
 
     AG_ScaledContainer *mapExplorer = new AG_ScaledContainer((AG_Widget*)workArea, 0.15, 1.0, 0, TOP_RIGHT);
     AG_ScaledContainer *mapTabs = new AG_ScaledContainer((AG_Widget*)workArea, 0.7, 0.05, 0, TOP_CENTER);
@@ -47,8 +47,8 @@ int main(int argc, char **argv)
     toolbox->SetBackgroundColor(al_map_rgb(0, 0, 0));
     tileChooser->SetBackgroundColor(al_map_rgb(50, 50, 50));
     tileChooserLabel->SetColor(al_map_rgb(255,255,255));
-    tileOptions->SetBackgroundColor(al_map_rgb(50, 50, 50));
-    tileOptionsLabel->SetColor(al_map_rgb(255,255,255));
+    //tileOptions->SetBackgroundColor(al_map_rgb(50, 50, 50));
+    //tileOptionsLabel->SetColor(al_map_rgb(255,255,255));
 
     mapExplorer->SetBackgroundColor(al_map_rgb(0, 0, 0));
     mapTabs->SetBackgroundColor(al_map_rgb(255, 255, 0));
@@ -59,11 +59,12 @@ int main(int argc, char **argv)
     tileChooser->Draw();
     tileChooserLabel->Draw();
     tile1->Draw();
-    tileOptions->Draw();
-    tileOptionsLabel->Draw();
+    //tileOptions->Draw();
+   // tileOptionsLabel->Draw();
     mapExplorer->Draw();
     mapTabs->Draw();
     layerTabs->Draw();
+    al_flip_display();
 
     ALLEGRO_EVENT ev;
     while(true)
@@ -82,8 +83,8 @@ int main(int argc, char **argv)
             toolbox->Draw();
             tileChooser->Draw();
             tileChooserLabel->Draw();
-            tileOptions->Draw();
-            tileOptionsLabel->Draw();
+            //tileOptions->Draw();
+            //tileOptionsLabel->Draw();
             mapExplorer->Draw();
             mapTabs->Draw();
             layerTabs->Draw();

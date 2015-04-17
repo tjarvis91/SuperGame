@@ -53,52 +53,34 @@ class AG_Widget;
 class AG_Window;
 
 /* Class Definitions */
-//AG_Window
-class AG_Window
-{
-    private:
-        ALLEGRO_THREAD *listen;
-        std::set<AG_Widget *> clickables;
-    protected:
-        ALLEGRO_DISPLAY * display;
-        ALLEGRO_EVENT_QUEUE * event_queue;
-        ALLEGRO_TIMER * timer;
-        int w, h;
-    public:
-        AG_Window();
-        ~AG_Window();
-        void AddClickable(AG_Widget *add);
-        void RemoveClickable(AG_Widget *remove);
-        ALLEGRO_DISPLAY * GetDisplay();
-        ALLEGRO_EVENT_QUEUE * GetEventQueue();
-        ALLEGRO_TIMER * GetTimer();
-        int GetWidth();
-        int GetHeight();
-        void Press(int x, int y);
-        void Resize();
-        boolean Setup(int w, int h);
-
-};
 
 //AG_Widget
-class AG_Widget : public AG_Window
+class AG_Widget
 {
     private:
         std::set<AG_Widget*> listeners;
-
     protected:
         AG_Widget();
-        AG_Window *window;
         AG_Widget *parent;
-        int x, y;
+        ALLEGRO_DISPLAY * display;
+        ALLEGRO_EVENT_QUEUE * event_queue;
+        ALLEGRO_TIMER * timer;
+        int x, y, w, h;
 
     public:
-        AG_Widget(AG_Window *window);
         AG_Widget(AG_Widget *parent);
+        ~AG_Widget();
+        virtual void AddClickable(AG_Widget *add);
+        virtual void RemoveClickable(AG_Widget *remove);
         int GetX();
         int GetY();
+        int GetWidth();
+        int GetHeight();
         int GetLocalX();
         int GetLocalY();
+        ALLEGRO_DISPLAY * GetDisplay();
+        ALLEGRO_EVENT_QUEUE * GetEventQueue();
+        ALLEGRO_TIMER * GetTimer();
         virtual void HandleNotify(){};
         virtual void Notify()
         {
@@ -106,7 +88,7 @@ class AG_Widget : public AG_Window
         }
         virtual void AddListener(AG_Widget *l)
         {
-            window->AddClickable(this);
+            AddClickable(this);
             listeners.insert(l);
         }
 
@@ -122,6 +104,26 @@ class AG_Widget : public AG_Window
                 error("Could not unregister the specified listener object as it is not registered.");
             }
         }
+};
+
+//AG_Window
+class AG_Window : public AG_Widget
+{
+    private:
+        ALLEGRO_THREAD *listen;
+    protected:
+        int w, h;
+    public:
+        std::vector<AG_Widget *> clickables;
+
+        AG_Window();
+        ~AG_Window();
+        void AddClickable(AG_Widget *add);
+        void RemoveClickable(AG_Widget *remove);
+        void Press(int x, int y);
+        void Resize();
+        boolean Setup(int w, int h);
+
 };
 
 //AG_Alignable

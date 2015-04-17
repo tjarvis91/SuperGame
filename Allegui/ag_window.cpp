@@ -11,7 +11,7 @@
 
 static void *Listen(ALLEGRO_THREAD *listen, void *arg);
 
-AG_Window::AG_Window()
+AG_Window::AG_Window() : AG_Widget()
 {
     w = 0;
     h = 0;
@@ -20,53 +20,28 @@ AG_Window::AG_Window()
 
 AG_Window::~AG_Window()
 {
-    al_destroy_timer(timer);
-    al_destroy_display(display);
-    al_destroy_event_queue(event_queue);
     al_destroy_thread(listen);
 }
 
 void AG_Window::AddClickable(AG_Widget *add)
 {
-    clickables.insert(add);
+std::vector<AG_Widget *>::iterator it = clickables.begin();
+clickables.insert(it, add);
+    //clickables.push_back(add);
 }
 
 void AG_Window::RemoveClickable(AG_Widget *remove)
 {
-    std::set<AG_Widget *>::const_iterator iter = clickables.find(remove);
-    if(iter != clickables.end())
+    for(unsigned int i = 0; i < clickables.size(); i++)
     {
-        clickables.erase(iter);
+        if(clickables.at(i) == remove)
+            {
+            clickables.erase(clickables.begin() + i);
+            return;
+            }
     }
-    else
-    {
-        error("Could not unregister the specified clickable object as it is not registered.");
-    }
-}
 
-ALLEGRO_DISPLAY * AG_Window::GetDisplay()
-{
-    return display;
-}
-
-ALLEGRO_EVENT_QUEUE * AG_Window::GetEventQueue()
-{
-    return event_queue;
-}
-
-ALLEGRO_TIMER * AG_Window::GetTimer()
-{
-    return timer;
-}
-
-int AG_Window::GetWidth()
-{
-    return w;
-}
-
-int AG_Window::GetHeight()
-{
-    return h;
+    error("Could not unregister the specified clickable object as it is not registered.");
 }
 
 void AG_Window::Press(int x_press, int y_press)
@@ -84,8 +59,8 @@ void AG_Window::Resize()
 float screen_w, screen_h, sx, sy;
 ALLEGRO_TRANSFORM trans;
 
-    screen_w = al_get_display_width(display);
-    screen_h = al_get_display_height(display);
+    screen_w = al_get_display_width(GetDisplay());
+    screen_h = al_get_display_height(GetDisplay());
 
     sx = screen_w / (float)w;
     sy = screen_h / (float)h;
